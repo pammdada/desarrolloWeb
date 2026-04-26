@@ -19,6 +19,7 @@ export class Login {
   onLogin() {
     this.autenticacion.login(this.credentials).subscribe({
       next: (user: any) => {
+        this.autenticacion.setCurrentUser(user);
         const rolRecibido = user.rol.toUpperCase();
         if (rolRecibido == 'ADMIN') {
           this.router.navigate(['/admin']);

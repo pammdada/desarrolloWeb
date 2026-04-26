@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { autenticacion } from '../../services/autenticacion';
 
 @Component({
   selector: 'app-cliente',
@@ -6,6 +7,15 @@ import { Component } from '@angular/core';
   templateUrl: './cliente.html',
   styleUrl: './cliente.css',
 })
-export class Cliente {
+export class Cliente implements OnInit {
+  nombreUsuario: string = '';
 
+  constructor(private autenticacion: autenticacion) {}
+
+  ngOnInit() {
+    const user = this.autenticacion.getCurrentUser();
+    if (user) {
+      this.nombreUsuario = user.nombre;
+    }
+  }
 }

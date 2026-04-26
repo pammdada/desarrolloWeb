@@ -16,4 +16,17 @@ export class autenticacion {
   registrar(userData: any) {
     return this.http.post('http://localhost:8080/api/auth/registrar', userData);
   }
+
+  setCurrentUser(user: any) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  getCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+  }
+
+  logout() {
+    localStorage.removeItem('currentUser');
+  }
 }
