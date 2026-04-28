@@ -29,23 +29,31 @@ export class RegistrarMascota {
     if (usuario) {
       const usuarioObj = JSON.parse(usuario);
       this.nuevaMascota.cliente = { id: Number(usuarioObj.id) };
-    
-    console.log("ID recuperado con éxito:", this.nuevaMascota.cliente);
+
+      const mascotaParaJava = {
+        nombre: this.nuevaMascota.nombre,
+        especie: this.nuevaMascota.especie,
+        raza: this.nuevaMascota.raza,
+        edad: this.nuevaMascota.edad,
+        cliente: { id: usuarioObj.id }
+      };
+
+      console.log("ID recuperado con éxito:", this.nuevaMascota.cliente);
     } else {
-    alert('No se encontró la sesión del usuario');
-    return;
+      alert('No se encontró la sesión del usuario');
+      return;
     }
 
-    
-this.mascotaService.registrar(this.nuevaMascota).subscribe({
-  next: () => {
-    alert('Mascota registrada exitosamente');
-    this.router.navigate(['/cliente']);
-  },
-  error: (err) => {
+
+    this.mascotaService.registrar(this.nuevaMascota).subscribe({
+      next: () => {
+        alert('Mascota registrada exitosamente');
+        this.router.navigate(['/cliente']);
+      },
+      error: (err) => {
         console.log("Error 400 - Datos enviados:", this.nuevaMascota);
         console.error("Detalle del error:", err);
-  }
-  });
+      }
+    });
   }
 }
