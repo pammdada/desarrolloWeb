@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { autenticacion } from '../../services/autenticacion';
+import { autenticacion } from '../../services/Autenticacion/autenticacion';
+import {RouterModule} from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cliente',
-  imports: [],
+  imports: [CommonModule, RouterModule],
+  standalone: true,
   templateUrl: './cliente.html',
   styleUrl: './cliente.css',
 })

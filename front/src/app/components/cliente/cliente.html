@@ -5,9 +5,16 @@
         <h1 class="text-5xl text-center text-green-500 font-bold">
             Bienvenido {{ nombreUsuario }}
         </h1>
-        <div class="flex justify-center mt-5">
-            <button class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+        <div class="flex justify-center mt-5 gap-4">
+            <button 
+            routerLink="/agendar-cita" 
+            class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" >
                 Pedir una cita
+            </button>
+            <button 
+            routerLink="/registrar-mascota" 
+            class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" >
+                Registrar Mascota
             </button>
         </div>
     </div>

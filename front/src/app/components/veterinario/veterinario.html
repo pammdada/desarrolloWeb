@@ -1,1 +1,47 @@
-<p>veterinario works!</p>
+<div class="min-h-screen bg-gray-50 p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-blue-600 pl-4">
+                Gestión de Citas Entrantes
+            </h1>
+            <span class="bg-blue-100 text-blue-800 text-sm font-semibold px-3 py-1 rounded-full">
+                Veterinario Activo
+            </span>
+        </div>
+
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-gray-100 uppercase text-sm text-gray-600">
+                    <tr>
+                        <th class="p-4">Mascota</th>
+                        <th class="p-4">Motivo</th>
+                        <th class="p-4">Fecha y Hora</th>
+                        <th class="p-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr *ngFor="let cita of citasPendientes" class="hover:bg-blue-50 transition">
+                        <td class="p-4 font-medium text-gray-900">{{ cita.nombreMascota }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.motivo }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.fechaHora | date:'short' }}</td>
+                        <td class="p-4 flex justify-center gap-3">
+                            <button (click)="gestionarCita(cita.id, 'CONFIRMADA')"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                                Aceptar
+                            </button>
+                            <button (click)="gestionarCita(cita.id, 'RECHAZADA')"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                                Rechazar
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="citasPendientes.length === 0">
+                        <td colspan="4" class="p-10 text-center text-gray-400 italic">
+                            No tienes solicitudes de citas pendientes por ahora.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
