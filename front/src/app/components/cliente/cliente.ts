@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Cliente implements OnInit {
   nombreUsuario: string = '';
+  mostrarMenu: boolean = false;
 
   constructor(private autenticacion: autenticacion, private router: Router) {}
 
@@ -20,6 +21,10 @@ export class Cliente implements OnInit {
     if (user) {
       this.nombreUsuario = user.nombre;
     }
+  }
+
+  toggleMenu() {
+    this.mostrarMenu = !this.mostrarMenu;
   }
 
   //Para cerrar sesión, limpia el LocalStorage y redirige a la pantalla principal.
