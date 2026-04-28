@@ -13,26 +13,39 @@ import { Router } from '@angular/router';
 })
 export class RegistrarMascota {
 
-  nuevaMascorta: any = {
+  nuevaMascota: any = {
     nombre: '',
     especie: '',
     raza: '',
     edad: 0,
-    clienteId: null
+    cliente: null
   }
 
-  constructor(private mascotaService: Mascota, private router: Router) {}
+  constructor(private mascotaService: Mascota, private router: Router) { }
 
   guardarMascota() {
-    const clienteId = localStorage.getItem('clienteId');
-    this.nuevaMascorta.clienteId = clienteId;
+    const usuario = localStorage.getItem('currentUser');
 
-    this.mascotaService.registrar(this.nuevaMascorta).subscribe({
-      next: () => {
-        alert('Mascota registrada exitosamente');
-        this.router.navigate(['/cliente']);
-      },
-      error: (err) => alert('Error al registrar mascota')
+    if (usuario) {
+      const usuarioObj = JSON.parse(usuario);
+      this.nuevaMascota.cliente = { id: Number(usuarioObj.id) };
+    
+    console.log("ID recuperado con éxito:", this.nuevaMascota.cliente);
+    } else {
+    alert('No se encontró la sesión del usuario');
+    return;
+    }
+
+    
+this.mascotaService.registrar(this.nuevaMascota).subscribe({
+  next: () => {
+    alert('Mascota registrada exitosamente');
+    this.router.navigate(['/cliente']);
+  },
+  error: (err) => {
+        console.log("Error 400 - Datos enviados:", this.nuevaMascota);
+        console.error("Detalle del error:", err);
+  }
   });
   }
 }
