@@ -1,0 +1,39 @@
+<div class="max-w-lg mx-auto mt-10 p-8 bg-white rounded-2xl shadow-2xl border-b-8 border-green-500">
+    <h2 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">Registrar Nueva Mascota</h2>
+
+    <form (ngSubmit)="guardarMascota()" class="space-y-4">
+        <div>
+            <label class="block text-sm font-semibold text-gray-700">Nombre de la mascota</label>
+            <input type="text" name="nombre" [(ngModel)]="nuevaMascota.nombre" required
+                class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">Especie</label>
+                <select name="especie" [(ngModel)]="nuevaMascota.especie"
+                    class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none">
+                    <option value="Perro">Perro</option>
+                    <option value="Gato">Gato</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">Raza</label>
+                <input type="text" name="raza" [(ngModel)]="nuevaMascota.raza"
+                    class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-semibold text-gray-700">Edad (años)</label>
+            <input type="number" name="edad" [(ngModel)]="nuevaMascota.edad"
+                class="w-full mt-1 p-3 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none">
+        </div>
+
+        <button type="submit"
+            class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg transform hover:scale-105 transition duration-300">
+            Guardar Mascota
+        </button>
+    </form>
+</div>

@@ -6,6 +6,7 @@ import { Cliente } from './components/cliente/cliente';
 import { Home } from './components/home/home';
 import { Registro } from './components/registro/registro';
 import { AgendarCita } from './components/agendar-cita/agendar-cita';
+import { RegistrarMascota } from './components/registrar-mascota/registrar-mascota';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'cliente', component: Cliente },
   { path: 'veterinario', component: Veterinario },
   { path: 'agendar-cita', component: AgendarCita },
+  { path: 'registrar-mascota', component: RegistrarMascota },
   { path: '**', redirectTo: '' }
 ];
