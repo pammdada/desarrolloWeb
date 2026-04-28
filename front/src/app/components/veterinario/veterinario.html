@@ -26,15 +26,15 @@
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     <tr *ngFor="let cita of citasPendientes" class="hover:bg-blue-50 transition">
-                        <td class="p-4 font-medium text-gray-900">{{ cita.nombreMascota }}</td>
+                        <td class="p-4 font-medium text-gray-900">{{ cita.mascota?.nombre }}</td>
                         <td class="p-4 text-gray-600">{{ cita.motivo }}</td>
                         <td class="p-4 text-gray-600">{{ cita.fechaHora | date:'short' }}</td>
                         <td class="p-4 flex justify-center gap-3">
-                            <button (click)="gestionarCita(cita.id, 'CONFIRMADA')"
+                            <button (click)="gestionarCita(cita, 'ACEPTADA')"
                                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
                                 Aceptar
                             </button>
-                            <button (click)="gestionarCita(cita.id, 'RECHAZADA')"
+                            <button (click)="gestionarCita(cita, 'RECHAZADA')"
                                 class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
                                 Rechazar
                             </button>

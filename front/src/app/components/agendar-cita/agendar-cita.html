@@ -8,10 +8,10 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">¿Para qué mascota?</label>
-                <select name="mascotaId" [(ngModel)]="cita.mascotaId" required
+                <select name="mascota" [(ngModel)]="cita.mascota" required
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2 border">
                     <option [ngValue]="null" disabled>Selecciona una mascota</option>
-                    <option *ngFor="let m of listaMascotas" [value]="m.id">
+                    <option *ngFor="let m of listaMascotas" [ngValue]="{ id: m.id}">
                         {{ m.nombre }} ({{ m.especie }})
                     </option>
                 </select>

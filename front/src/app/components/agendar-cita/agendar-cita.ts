@@ -14,7 +14,7 @@ import { Citas } from '../../services/Citas/citas';
 })
 export class AgendarCita implements OnInit {
   listaMascotas: any[] = [];
-  cita = { fechaHora: '', motivo: '', mascotaId: null, estado: 'PENDIENTE' };
+  cita: any = { fechaHora: '', motivo: '', mascota: null, estado: 'PENDIENTE' };
 
   constructor(private Mascota: Mascota, private citas: Citas, private router: Router) { }
 
@@ -23,10 +23,12 @@ export class AgendarCita implements OnInit {
   }
 
   cargarMascotas() {
-    const clienteId = localStorage.getItem('clienteId');
+    const usuarioAc = localStorage.getItem('currentUser');
 
-    if (clienteId) {
-      const usuario = JSON.parse(clienteId);
+    if (usuarioAc) {
+      const usuario = JSON.parse(usuarioAc);
+      const clienteId = usuario.id;
+
       this.Mascota.listarPorCliente(clienteId).subscribe((data) => {
         this.listaMascotas = data;
       },
@@ -38,15 +40,32 @@ export class AgendarCita implements OnInit {
   }
 
   enviarCita() {
-    this.citas.agendarCita(this.cita).subscribe({
+    if (!this.cita.mascota) {
+      alert('Por favor, selecciona una mascota');
+      return;
+    }
+
+    const datosParaJava = {
+    fechaHora: this.cita.fechaHora, 
+    estado: "PENDIENTE",
+    motivo: this.cita.motivo,
+    mascota: { id: this.cita.mascota.id },
+    veterinario: { id: 20} 
+    };
+    
+    const usuarioAc = localStorage.getItem('currentUser');
+    if(usuarioAc) {
+      const usuario = JSON.parse(usuarioAc);
+      const clienteId = usuario.id;
+      this.citas.agendarCita(datosParaJava).subscribe({
       next: (res) => {
         alert('¡Cita solicitada con éxito! Espera a que el veterinario la confirme.');
         this.router.navigate(['/cliente']);
       },
       error: (err) => {
-        console.error('Error al agendar cita', err);
-        alert('Hubo un problema al agendar la cita.');
+        console.error('Error al agendar cita:', err);
       }
-    });
+      });
+    }
   }
 }

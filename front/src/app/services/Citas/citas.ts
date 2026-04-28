@@ -11,7 +11,7 @@ export class Citas {
   constructor(private http: HttpClient) {}
 
   agendarCita(cita: any): Observable<any> {
-    return this.http.post(this.apiUrl, cita);
+    return this.http.post(`${this.apiUrl}/registrar`, cita);
   }
 
   listarPendientes(): Observable<any[]> {

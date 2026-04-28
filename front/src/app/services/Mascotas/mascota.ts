@@ -11,7 +11,8 @@ export class Mascota {
   constructor(private http: HttpClient) {}
 
   listarPorCliente(clienteId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/cliente/${clienteId}`);
+
+    return this.http.get<any[]>(`${this.apiUrl}/mis-mascotas/${clienteId}`);
   }
 
   registrar(mascota: any): Observable<any> {

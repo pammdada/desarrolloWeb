@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Citas } from '../../services/Citas/citas';
 
 @Component({
@@ -12,7 +12,7 @@ import { Citas } from '../../services/Citas/citas';
 export class Veterinario {
   citasPendientes: any[] = [];
 
-  constructor(private citas: Citas) {}
+  constructor(private citas: Citas) { }
 
   ngOnInit(): void {
     this.obtenerCitasPendientes();
@@ -30,7 +30,14 @@ export class Veterinario {
   }
 
   gestionarCita(cita: any, nuevoEstado: string) {
-    this.citas.actualizarEstado(cita.id, nuevoEstado).subscribe({
+    console.log("Objeto cita recibido:", cita);
+    const idReal = cita.id;
+
+    if (!idReal) {
+      console.error("No se encontró el ID de la cita. Atributos disponibles:", Object.keys(cita));
+      return;
+    }
+    this.citas.actualizarEstado(idReal, nuevoEstado).subscribe({
       next: () => {
         alert(`La cita ha sido ${nuevoEstado.toLowerCase()} con éxito.`);
         this.obtenerCitasPendientes();
