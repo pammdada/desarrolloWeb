@@ -15,6 +15,6 @@ export class Mascota {
   }
 
   registrar(mascota: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, mascota);
+    return this.http.post<any>(`${this.apiUrl}/registrar`, mascota);
   }
 }
