@@ -23,7 +23,7 @@ export class Cliente implements OnInit {
   }
 
   //Para cerrar sesión, limpia el LocalStorage y redirige a la pantalla principal.
-  cerrarSesion() {
+  cerrarSesionCliente() {
     localStorage.clear();
     this.router.navigate(['/home']);
   }
