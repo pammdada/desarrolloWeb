@@ -2,6 +2,8 @@ package com.example.demo.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +30,7 @@ public class Cita {
 
     @ManyToOne
     @JoinColumn(name = "mascota_id")
+    @JsonIgnoreProperties("citas")
     private Mascota mascota;
 
     @ManyToOne

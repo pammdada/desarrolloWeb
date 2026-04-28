@@ -21,9 +21,13 @@ public class CitasService {
         return citaRepository.save(cita);
     }
 
-    public List<Cita> obtenerCitasPendientes() {
-        return citaRepository.findByEstado("Pendiente");
+    public List<Cita> obtenerCitasPendientes(String estado) {
+        return citaRepository.findByEstado(estado);
     }
 
-
+    public Cita cambiarEstadoCita(Integer id, String estado) {
+        Cita cita = citaRepository.findById(id).orElseThrow();
+        cita.setEstado(estado);
+        return citaRepository.save(cita);
+    }
 }
