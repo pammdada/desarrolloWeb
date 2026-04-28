@@ -34,6 +34,9 @@ public class Cita {
     @JoinColumn(name = "veterinario_id")
     private Usuario veterinario;
 
+    @Column (name = "motivo")
+    private String motivo;
+
     @OneToOne(mappedBy = "cita", cascade = CascadeType.ALL)
     private Reporte reporte;
 
@@ -86,5 +89,13 @@ public class Cita {
 
     public void setReporte(Reporte reporte) {
         this.reporte = reporte;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
 }

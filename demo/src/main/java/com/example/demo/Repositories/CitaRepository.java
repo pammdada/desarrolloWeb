@@ -9,5 +9,5 @@ import com.example.demo.Model.Cita;
 
 @Repository
 public interface CitaRepository extends JpaRepository<Cita, Integer> {
-    List<Cita> findByVeterinarioIdAndEstado(Integer vetId, String estado);
+    List<Cita> findByEstado(String estado);
 }
