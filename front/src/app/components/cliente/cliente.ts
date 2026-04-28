@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { autenticacion } from '../../services/Autenticacion/autenticacion';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Router} from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,12 +13,18 @@ import { CommonModule } from '@angular/common';
 export class Cliente implements OnInit {
   nombreUsuario: string = '';
 
-  constructor(private autenticacion: autenticacion) {}
+  constructor(private autenticacion: autenticacion, private router: Router) {}
 
   ngOnInit() {
     const user = this.autenticacion.getCurrentUser();
     if (user) {
       this.nombreUsuario = user.nombre;
     }
+  }
+
+  //Para cerrar sesión, limpia el LocalStorage y redirige a la pantalla principal.
+  cerrarSesion() {
+    localStorage.clear();
+    this.router.navigate(['/home']);
   }
 }
