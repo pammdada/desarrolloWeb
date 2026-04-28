@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class RegistrarMascota {
 
-  nuevaMascorta: any = {
+  nuevaMascota: any = {
     nombre: '',
     especie: '',
     raza: '',
@@ -25,9 +25,9 @@ export class RegistrarMascota {
 
   guardarMascota() {
     const clienteId = localStorage.getItem('clienteId');
-    this.nuevaMascorta.clienteId = clienteId;
+    this.nuevaMascota.clienteId = clienteId;
 
-    this.mascotaService.registrar(this.nuevaMascorta).subscribe({
+    this.mascotaService.registrar(this.nuevaMascota).subscribe({
       next: () => {
         alert('Mascota registrada exitosamente');
         this.router.navigate(['/cliente']);
