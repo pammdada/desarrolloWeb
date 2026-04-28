@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,8 @@ import com.example.demo.Model.Mascota;
 import com.example.demo.Services.MascotaService;
 
 @RestController
-@RequestMapping("/api/cliente/mascotas")
+@RequestMapping("/api/mascotas")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MascotaController {
 
     private final MascotaService mascotaService;
