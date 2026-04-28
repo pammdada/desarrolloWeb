@@ -48,7 +48,7 @@ export class RegistrarMascota {
     this.mascotaService.registrar(this.nuevaMascota).subscribe({
       next: () => {
         alert('Mascota registrada exitosamente');
-        this.router.navigate(['/mis-mascotas']);
+        this.router.navigate(['/mascotas']);
       },
       error: (err) => {
         console.log("Error 400 - Datos enviados:", this.nuevaMascota);
