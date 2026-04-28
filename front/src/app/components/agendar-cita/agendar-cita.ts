@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Mascota } from '../../services/Mascotas/mascota';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { Citas } from '../../services/Citas/citas';
 
 @Component({
   selector: 'app-agendar-cita',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterOutlet],
+  imports: [FormsModule, CommonModule, RouterOutlet, RouterLink],
   templateUrl: './agendar-cita.html',
   styleUrl: './agendar-cita.css',
 })
