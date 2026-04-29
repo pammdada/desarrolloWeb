@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { autenticacion } from '../../services/Autenticacion/autenticacion';
 import {RouterModule, Router} from '@angular/router';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cliente',
@@ -12,7 +13,6 @@ import { CommonModule } from '@angular/common';
 })
 export class Cliente implements OnInit {
   nombreUsuario: string = '';
-  mostrarMenu: boolean = false;
 
   constructor(private autenticacion: autenticacion, private router: Router) {}
 
@@ -23,13 +23,23 @@ export class Cliente implements OnInit {
     }
   }
 
-  toggleMenu() {
-    this.mostrarMenu = !this.mostrarMenu;
-  }
-
-  //Para cerrar sesión, limpia el LocalStorage y redirige a la pantalla principal.
+  //Para cerrar sesión:
   cerrarSesionUsuario() {
-    localStorage.clear();
-    this.router.navigate(['/home']);
+    Swal.fire({
+      title: "Cerrar sesión",
+      text: "Cerrar sesión de la cuenta actual.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "rgb(39, 204, 75)",
+      confirmButtonText: "Cerrar sesión",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //Esto limpia el LocalStorage y redirige a la pantalla principal.
+        localStorage.clear();
+        this.router.navigate(['/home']);
+      };
+    });
   }
 }
