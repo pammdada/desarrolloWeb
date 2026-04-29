@@ -34,7 +34,7 @@ export class Cliente implements OnInit {
       cancelButtonColor: "rgb(39, 204, 75)",
       confirmButtonText: "Cerrar sesión",
       cancelButtonText: "Cancelar"
-    }).then((result: any) => {
+    }).then((result) => {
       if (result.isConfirmed) {
         //Esto limpia el LocalStorage y redirige a la pantalla principal.
         localStorage.clear();
