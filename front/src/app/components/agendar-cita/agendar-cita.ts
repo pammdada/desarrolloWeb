@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Mascota } from '../../services/Mascotas/mascota';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { Citas } from '../../services/Citas/citas';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-agendar-cita',
@@ -59,7 +60,13 @@ export class AgendarCita implements OnInit {
       const clienteId = usuario.id;
       this.citas.agendarCita(datosParaJava).subscribe({
       next: (res) => {
-        alert('¡Cita solicitada con éxito! Espera a que el veterinario la confirme.');
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "¡Cita confirmada!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         this.router.navigate(['/cliente']);
       },
       error: (err) => {
