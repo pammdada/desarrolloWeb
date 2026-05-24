@@ -15,7 +15,7 @@ export class RegistrarMascota {
 
   nuevaMascota: any = {
     nombre: '',
-    especie: '',
+    tipo: '',
     raza: '',
     edad: 0,
     cliente: null
@@ -25,17 +25,19 @@ export class RegistrarMascota {
 
   guardarMascota() {
     const usuario = localStorage.getItem('currentUser');
+    let mascotaParaJava: any;
 
     if (usuario) {
       const usuarioObj = JSON.parse(usuario);
       this.nuevaMascota.cliente = { id: Number(usuarioObj.id) };
 
-      const mascotaParaJava = {
+      mascotaParaJava = {
         nombre: this.nuevaMascota.nombre,
-        especie: this.nuevaMascota.especie,
+        tipo: this.nuevaMascota.tipo,
         raza: this.nuevaMascota.raza,
         edad: this.nuevaMascota.edad,
-        cliente: { id: usuarioObj.id }
+        fotoUrl: this.nuevaMascota.fotoUrl || null,
+        clienteId: Number(usuarioObj.id)
       };
 
       console.log("ID recuperado con éxito:", this.nuevaMascota.cliente);
@@ -45,14 +47,13 @@ export class RegistrarMascota {
     }
 
 
-    this.mascotaService.registrar(this.nuevaMascota).subscribe({
+    this.mascotaService.registrar(mascotaParaJava).subscribe({
       next: () => {
         alert('Mascota registrada exitosamente');
-        this.router.navigate(['/mascotas']);
+        this.router.navigate(['/cliente']);
       },
       error: (err) => {
-        console.log("Error 400 - Datos enviados:", this.nuevaMascota);
-        console.error("Detalle del error:", err);
+        console.log("Error al registrar mascota - Datos enviados:", mascotaParaJava, "Status:", err.status);
       }
     });
   }

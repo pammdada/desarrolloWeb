@@ -6,15 +6,20 @@ import { Injectable } from '@angular/core';
 })
 export class autenticacion {
   private API_URL = 'http://localhost:8080/api/auth';
+  private httpOptions = { withCredentials: true };
 
   constructor(private http: HttpClient) { }
 
   login(credentials: any) {
-    return this.http.post(`${this.API_URL}/login`, credentials);
+    return this.http.post(`${this.API_URL}/login`, credentials, this.httpOptions);
   }
 
   registrar(userData: any) {
-    return this.http.post('http://localhost:8080/api/auth/registrar', userData);
+    return this.http.post(`${this.API_URL}/registro`, userData, this.httpOptions);
+  }
+
+  verificarToken(data: any) {
+    return this.http.post(`${this.API_URL}/verificar-token`, data, this.httpOptions);
   }
 
   setCurrentUser(user: any) {

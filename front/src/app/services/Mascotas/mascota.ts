@@ -6,16 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Mascota {
-  private apiUrl = 'http://localhost:8080/api/mascotas';
+  private apiUrl = 'http://localhost:8080/api/cliente/mascotas';
 
   constructor(private http: HttpClient) {}
 
   listarPorCliente(clienteId: string): Observable<any[]> {
-
-    return this.http.get<any[]>(`${this.apiUrl}/mis-mascotas/${clienteId}`);
+    return this.http.get<any[]>(this.apiUrl, { withCredentials: true });
   }
 
   registrar(mascota: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/registrar`, mascota);
+    return this.http.post<any>(this.apiUrl, mascota, { withCredentials: true });
   }
 }

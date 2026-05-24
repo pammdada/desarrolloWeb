@@ -12,15 +12,31 @@ import { Router } from '@angular/router';
   styleUrl: './login.css',
 })
 export class Login {
-  credentials = { email: '', password: '' };
+  credentials = { correo: '', contrasena: '' };
 
   constructor(private autenticacion: autenticacion, private router: Router) {}
 
   onLogin() {
-    this.autenticacion.login(this.credentials).subscribe({
-      next: (user: any) => {
+    const credentials = {
+      correo: this.credentials.correo.trim().toLowerCase(),
+      contrasena: this.credentials.contrasena
+    };
+
+    this.autenticacion.login(credentials).subscribe({
+      next: (res: any) => {
+        if (res?.exito === false) {
+          alert('Error de autenticación: ' + (res.mensaje || res.message || 'Credenciales incorrectas'));
+          return;
+        }
+
+        const user = res.datos ?? res.data;
+        if (!user) {
+          alert('Error de autenticación: respuesta inválida del servidor');
+          return;
+        }
+
         this.autenticacion.setCurrentUser(user);
-        const rolRecibido = user.rol.toUpperCase();
+        const rolRecibido = user?.rol?.toUpperCase();
         if (rolRecibido == 'ADMIN') {
           this.router.navigate(['/admin']);
         } else if (rolRecibido == 'VETERINARIO') {
@@ -29,7 +45,10 @@ export class Login {
           this.router.navigate(['/cliente']);
         }
       },
-      error: (err) => alert ('Error de autenticación: ' + err.error.message),
+      error: (err: any) => {
+        const mensaje = err.error?.mensaje || err.error?.message || 'Credenciales incorrectas';
+        alert('Error de autenticación: ' + mensaje);
+      },
     });
   }
 }

@@ -11,4 +11,8 @@ import com.example.demo.Model.Token;
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
     Optional<Token> findTopByCorreoAndUsadoFalseOrderByCreadoEnDesc(String correo);
+
+    Optional<Token> findTopByCorreoAndTokenAndUsadoFalseOrderByCreadoEnDesc(String correo, String token);
+
+    boolean existsByCorreoAndUsadoFalse(String correo);
 }

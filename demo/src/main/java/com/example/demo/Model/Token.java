@@ -28,6 +28,13 @@ public class Token {
     @Column(nullable = false)
     private Boolean usado = false;
     
-    @Column(name = "creado_en", updatable = false)
-    private LocalDateTime creadoEn = LocalDateTime.now();
+    @Column(name = "creado_en", nullable = false, updatable = false)
+    private LocalDateTime creadoEn;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.creadoEn == null) {
+            this.creadoEn = LocalDateTime.now();
+        }
+    }
 }

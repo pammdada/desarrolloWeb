@@ -33,50 +33,65 @@ public class UsuarioService {
 
     @Transactional
     public RespuestaApi registrarCliente(RegistroClienteSolicitud solicitud) {
-        if (usuarioRepositorio.existsByCorreo(solicitud.getCorreo())) {
+        String correoNormalizado = solicitud.getCorreo().trim().toLowerCase();
+        solicitud.setCorreo(correoNormalizado);
+
+        if (usuarioRepositorio.existsByCorreo(correoNormalizado)) {
             return RespuestaApi.error("El email ya está registrado");
         }
 
         String token = String.format("%06d", new Random().nextInt(999999));
 
         Token tokenV = Token.builder()
-                .correo(solicitud.getCorreo())
+                .correo(correoNormalizado)
                 .token(token)
                 .expiraEn(LocalDateTime.now().plusMinutes(15))
                 .usado(false)
+                .creadoEn(LocalDateTime.now())
                 .build();
         tokenRepositorio.save(tokenV);
 
-        registrosPendientes.put(solicitud.getCorreo(), solicitud);
+        registrosPendientes.put(correoNormalizado, solicitud);
 
-        correoServicio.enviarCorreoVerificacion(
-                solicitud.getCorreo(),
-                token,
-                solicitud.getNombres()
-        );
+        String mensaje = "Se ha enviado un código de verificación a tu email";
+        Object datos = null;
 
-        return RespuestaApi.exito(
-                "Se ha enviado un código de verificación a tu email",
-                null
-        );
+        try {
+            correoServicio.enviarCorreoVerificacion(
+                    solicitud.getCorreo(),
+                    token,
+                    solicitud.getNombres()
+            );
+        } catch (Exception ex) {
+            System.err.println("ERROR: No se pudo enviar el correo de verificación: " + ex.getMessage());
+            mensaje = "Registro creado. No se pudo enviar el correo, usa este código para verificar:";
+            datos = java.util.Map.of("token", token);
+        }
+
+        return RespuestaApi.exito(mensaje, datos);
     }
 
     @Transactional
     public RespuestaApi verificarToken(VerificarTokenSolicitud solicitud) {
+        String correoNormalizado = solicitud.getCorreo().trim().toLowerCase();
+        solicitud.setCorreo(correoNormalizado);
+        String tokenIngresado = solicitud.getToken().trim();
+        solicitud.setToken(tokenIngresado);
+
         Token tokenGuardado = tokenRepositorio
-                .findTopByCorreoAndUsadoFalseOrderByCreadoEnDesc(solicitud.getCorreo())
+                .findTopByCorreoAndTokenAndUsadoFalseOrderByCreadoEnDesc(correoNormalizado, tokenIngresado)
                 .orElse(null);
 
         if (tokenGuardado == null) {
+            boolean hayTokensPendientes = tokenRepositorio.existsByCorreoAndUsadoFalse(correoNormalizado);
+            if (hayTokensPendientes) {
+                return RespuestaApi.error("Código incorrecto");
+            }
             return RespuestaApi.error("No hay token pendiente para este email");
         }
 
         if (tokenGuardado.getExpiraEn().isBefore(LocalDateTime.now())) {
             return RespuestaApi.error("El código ha expirado. Solicita uno nuevo");
-        }
-
-        if (!tokenGuardado.getToken().equals(solicitud.getToken())) {
-            return RespuestaApi.error("Código incorrecto");
         }
 
         RegistroClienteSolicitud datosRegistro = registrosPendientes.get(solicitud.getCorreo());
@@ -109,7 +124,10 @@ public class UsuarioService {
         System.out.println("Correo recibido: [" + solicitud.getCorreo() + "]");
         System.out.println("Contrasena recibida: [" + solicitud.getContrasena() + "]");
 
-        Usuario usuario = usuarioRepositorio.findByCorreo(solicitud.getCorreo())
+        String correoNormalizado = solicitud.getCorreo().trim().toLowerCase();
+        solicitud.setCorreo(correoNormalizado);
+
+        Usuario usuario = usuarioRepositorio.findByCorreo(correoNormalizado)
                 .orElse(null);
 
         if (usuario == null) {
@@ -136,10 +154,16 @@ public class UsuarioService {
             System.out.println("ERROR: Password no coincide");
             return RespuestaApi.error("Credenciales incorrectas");
         }
+
+        String rolSinPrefijo = usuario.getRol();
+        if (rolSinPrefijo != null && rolSinPrefijo.startsWith("ROLE_")) {
+            rolSinPrefijo = rolSinPrefijo.substring(5);
+        }
+
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(usuario.getCorreo())
                 .password(usuario.getContrasena())
-                .roles(usuario.getRol())
+                .roles(rolSinPrefijo)
                 .build();
 
         org.springframework.security.core.Authentication authentication
@@ -156,6 +180,7 @@ public class UsuarioService {
 
         System.out.println("SUCCESS: Login exitoso");
         return RespuestaApi.exito("Login exitoso", java.util.Map.of(
+                "id", usuario.getId(),
                 "rol", usuario.getRol(),
                 "nombre", usuario.getNombre(),
                 "email", usuario.getCorreo()
