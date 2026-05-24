@@ -1,5 +1,5 @@
 package com.example.demo.Controller;
 
-public class MascotaController {
+public class CitaController {
     
 }
