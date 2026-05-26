@@ -10,7 +10,7 @@ export class Citas {
   private apiVeterinarioUrl = 'http://localhost:8080/api/veterinario';
   private httpOptions = { withCredentials: true };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Métodos para clientes
   agendarCita(cita: any): Observable<any> {
@@ -49,6 +49,21 @@ export class Citas {
       return this.rechazarCita(citaId);
     }
     return this.http.patch(`${this.apiVeterinarioUrl}/citas/${citaId}/${nuevoEstado.toLowerCase()}`, {}, this.httpOptions);
+  }
+
+  getMyAppointments(estado: string): Observable<any> {
+    return this.http.get(`http://localhost:8080/api/veterinario/citas/historial?estado=${estado}`, { withCredentials: true });
+  }
+  rescheduleAppointment(id: number, datos: { nuevaFecha: string, nuevaHora: string }): Observable<any> {
+    return this.http.put(`http://localhost:8080/api/veterinario/citas/${id}/reagendar`, datos, { withCredentials: true });
+  }
+
+  addReport(id: number, reporte: string): Observable<any> {
+    return this.http.post(`http://localhost:8080/api/veterinario/citas/${id}/reporte`, { reporte }, { withCredentials: true });
+  }
+
+  markAsAttended(id: number): Observable<any> {
+    return this.http.put(`http://localhost:8080/api/veterinario/citas/${id}/atendida`, {}, { withCredentials: true });
   }
 
 }

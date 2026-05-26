@@ -1,0 +1,150 @@
+/* animacion de los blobs decorativos de fondo: movimiento organico de 12s */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(-20px, 20px) scale(0.95); }
+  75% { transform: translate(30px, 10px) scale(1.02); }
+}
+
+.animate-blob {
+  animation: blob 12s ease-in-out infinite;
+}
+
+/* delays escalonados para que los blobs no se muevan sincronizados */
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* fade in general del dashboard al cargar */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* entrada del modal con escala y deslizamiento hacia abajo */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* entrada escalonada (stagger) para cards y filas de la tabla */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-item {
+  animation: slideUp 0.4s ease-out both;
+}
+
+/* delays progresivos para hasta 20 elementos */
+.stagger-item:nth-child(1) { animation-delay: 0.03s; }
+.stagger-item:nth-child(2) { animation-delay: 0.06s; }
+.stagger-item:nth-child(3) { animation-delay: 0.09s; }
+.stagger-item:nth-child(4) { animation-delay: 0.12s; }
+.stagger-item:nth-child(5) { animation-delay: 0.15s; }
+.stagger-item:nth-child(6) { animation-delay: 0.18s; }
+.stagger-item:nth-child(7) { animation-delay: 0.21s; }
+.stagger-item:nth-child(8) { animation-delay: 0.24s; }
+.stagger-item:nth-child(9) { animation-delay: 0.27s; }
+.stagger-item:nth-child(10) { animation-delay: 0.30s; }
+.stagger-item:nth-child(11) { animation-delay: 0.33s; }
+.stagger-item:nth-child(12) { animation-delay: 0.36s; }
+.stagger-item:nth-child(13) { animation-delay: 0.39s; }
+.stagger-item:nth-child(14) { animation-delay: 0.42s; }
+.stagger-item:nth-child(15) { animation-delay: 0.45s; }
+.stagger-item:nth-child(16) { animation-delay: 0.48s; }
+.stagger-item:nth-child(17) { animation-delay: 0.51s; }
+.stagger-item:nth-child(18) { animation-delay: 0.54s; }
+.stagger-item:nth-child(19) { animation-delay: 0.57s; }
+.stagger-item:nth-child(20) { animation-delay: 0.60s; }
+
+/* pulso del dot en el badge de estado activo */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* spin para el SVG del spinner de carga */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* glow verde sutil al hacer hover sobre una fila de la tabla */
+.table-row-custom {
+  transition: all 0.3s ease;
+}
+
+.table-row-custom:hover {
+  background: linear-gradient(90deg, rgba(34, 197, 94, 0.03), rgba(16, 185, 129, 0.03));
+}
+
+/* animacion de eliminacion: la fila se desvanece y se desplaza a la derecha */
+.deleting {
+  opacity: 0;
+  transform: translateX(80px);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* scrollbar personalizada para tablas con overflow */
+div::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+div::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+div::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+div::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ocultar spinners de los inputs tipo number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

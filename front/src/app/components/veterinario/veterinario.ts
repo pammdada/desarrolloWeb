@@ -2,21 +2,38 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Citas } from '../../services/Citas/citas';
 import Swal from 'sweetalert2';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { autenticacion } from '../../services/Autenticacion/autenticacion';
 
 @Component({
   selector: 'app-veterinario',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './veterinario.html',
   styleUrl: './veterinario.css',
 })
 export class Veterinario {
   citasPendientes: any[] = [];
+  myAppointments: any[] = [];
+  activeTab: string = 'pending';
+  filterStatus: string = 'ACEPTADA';
 
-  constructor(private citas: Citas) {}
+  showRescheduleModal: boolean = false;
+  selectedAppointment: any = null;
+  rescheduleData = { nuevaFecha: '', nuevaHora: '' };
+
+  showReportModal: boolean = false;
+  reportText: string = '';
+
+  constructor(
+    private citas: Citas,
+    private authService: autenticacion,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.obtenerCitasPendientes();
+    this.loadMyAppointments();
   }
 
   obtenerCitasPendientes() {
@@ -38,6 +55,19 @@ export class Veterinario {
           title: 'Error',
           text: 'No se pudieron cargar las citas pendientes'
         });
+      }
+    });
+  }
+
+  loadMyAppointments(): void {
+    // Reutiliza tu servicio de citas pasando el filtro 'ACEPTADA' o 'ATENDIDA'
+    this.citas.getMyAppointments(this.filterStatus).subscribe({
+      next: (response) => {
+        if (response && response.datos) {
+          this.myAppointments = response.datos;
+        } else {
+          this.myAppointments = [];
+        }
       }
     });
   }
@@ -102,5 +132,53 @@ export class Veterinario {
       }
     });
   }
-}
 
+  saveReport(): void {
+    this.citas.addReport(this.selectedAppointment.id, this.reportText)
+      .subscribe(() => {
+        this.showReportModal = false;
+        this.loadMyAppointments();
+      });
+  }
+  openReschedule(app: any): void {
+    this.selectedAppointment = app;
+    this.rescheduleData.nuevaFecha = app.fecha || '';
+    this.rescheduleData.nuevaHora = app.hora || '';
+    this.showRescheduleModal = true;
+  }
+
+  confirmReschedule(): void {
+    if (!this.rescheduleData.nuevaFecha || !this.rescheduleData.nuevaHora) {
+      Swal.fire('Error', 'Debe seleccionar fecha y hora', 'error');
+      return;
+    }
+
+    this.citas.rescheduleAppointment(this.selectedAppointment.id, {
+      nuevaFecha: this.rescheduleData.nuevaFecha,
+      nuevaHora: this.rescheduleData.nuevaHora + ':00'
+    }).subscribe({
+      next: (response) => {
+        if (response && response.exito) {
+          Swal.fire('Reagendado', 'La cita se movió con éxito', 'success');
+          this.showRescheduleModal = false;
+          this.obtenerCitasPendientes();
+        }
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
+  markAttended(id: number): void {
+    Swal.fire({
+      title: "¿Finalizar atención?",
+      text: "La cita cambiará a estado ATENDIDA",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, finalizar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.citas.markAsAttended(id).subscribe(() => this.loadMyAppointments());
+      }
+    });
+  }
+}
