@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { autenticacion } from '../../services/Autenticacion/autenticacion';
 import { Router } from '@angular/router';
+import { verificarRequisitosContrasena, validarContrasena } from '../../utils/validacion-contrasena';
 
 @Component({
   selector: 'app-registro',
@@ -44,43 +45,19 @@ export class Registro {
 
   //  Actualiza los checks de contraseña en cada pulsación del usuario
   // Se ejecuta con el evento (input) en el campo de contraseña
+  // Usa la funcion compartida del modulo utils para mantener consistencia
   actualizarChecksContrasena(): void {
-    const pw = this.nuevoUsuario.contrasena;
-    this.passwordChecks.longitud = pw.length >= 8;
-    this.passwordChecks.mayuscula = /[A-Z]/.test(pw);
-    this.passwordChecks.minuscula = /[a-z]/.test(pw);
-    this.passwordChecks.numero = /[0-9]/.test(pw);
-    this.passwordChecks.especial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw);
+    this.passwordChecks = verificarRequisitosContrasena(this.nuevoUsuario.contrasena);
   }
 
   constructor(private autenticacion: autenticacion, private router: Router) {}
 
   //  Valida que la contraseña cumpla requisitos mínimos de seguridad
-  // - Mínimo 8 caracteres
-  // - Al menos una letra mayúscula
-  // - Al menos una letra minúscula
-  // - Al menos un número
-  // - Al menos un carácter especial (!@#$%^&*)
+  // Usa la funcion compartida del modulo utils para mantener consistencia
   validarContrasena(): boolean {
-    const pw = this.nuevoUsuario.contrasena;
-    if (pw.length < 8) {
-      this.errores.contrasena = 'La contraseña debe tener al menos 8 caracteres';
-      return false;
-    }
-    if (!/[A-Z]/.test(pw)) {
-      this.errores.contrasena = 'La contraseña debe tener al menos una mayúscula';
-      return false;
-    }
-    if (!/[a-z]/.test(pw)) {
-      this.errores.contrasena = 'La contraseña debe tener al menos una minúscula';
-      return false;
-    }
-    if (!/[0-9]/.test(pw)) {
-      this.errores.contrasena = 'La contraseña debe tener al menos un número';
-      return false;
-    }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw)) {
-      this.errores.contrasena = 'La contraseña debe tener al menos un carácter especial';
+    const error = validarContrasena(this.nuevoUsuario.contrasena);
+    if (error) {
+      this.errores.contrasena = error;
       return false;
     }
     this.errores.contrasena = '';

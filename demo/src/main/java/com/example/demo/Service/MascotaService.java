@@ -52,6 +52,11 @@ public class MascotaService {
                 java.util.Map.of("id", mascota.getId(), "nombre", mascota.getNombre()));
     }
     
+    // Retorna la cantidad de mascotas registradas por un cliente
+    public long contarMascotasPorCliente(Integer clienteId) {
+        return mascotaRepository.countByClienteId(clienteId);
+    }
+
     public RespuestaApi listarMisMascotas(String correo) {
         Usuario cliente = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));

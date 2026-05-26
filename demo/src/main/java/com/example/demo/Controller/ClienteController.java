@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.DTO.ActualizarPerfilSolicitud;
+import com.example.demo.DTO.CambiarContrasenaSolicitud;
 import com.example.demo.DTO.CitaSolicitud;
 import com.example.demo.DTO.MascotaSolicitud;
 import com.example.demo.DTO.RespuestaApi;
 import com.example.demo.Service.CitaService;
 import com.example.demo.Service.MascotaService;
+import com.example.demo.Service.UsuarioService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +35,7 @@ public class ClienteController {
     
     private final MascotaService mascotaServicio;
     private final CitaService citaServicio;
+    private final UsuarioService usuarioServicio;
     
         @PostMapping("/mascotas")
     public ResponseEntity<RespuestaApi> registrarMascota(
@@ -70,5 +75,49 @@ public class ClienteController {
     @PatchMapping("/citas/{id}/rechazar-reagendacion")
     public ResponseEntity<RespuestaApi> rechazarReagendacion(@PathVariable Integer id) {
         return ResponseEntity.ok(citaServicio.rechazarReagendacion(id));
+    }
+
+    // ---------- Perfil del cliente ----------
+
+    /**
+     * Obtiene el perfil completo del cliente autenticado,
+     * incluyendo la cantidad de mascotas registradas.
+     */
+    @GetMapping("/perfil")
+    public ResponseEntity<RespuestaApi> obtenerPerfil(Principal principal) {
+        // Obtiene los datos base del perfil desde el servicio de usuario
+        RespuestaApi respuesta = usuarioServicio.obtenerPerfilCompleto();
+
+        // Agrega el conteo de mascotas al mapa de datos si la respuesta fue exitosa
+        if (respuesta.getExito() && respuesta.getDatos() instanceof java.util.Map) {
+            @SuppressWarnings("unchecked")
+            java.util.Map<String, Object> datos = (java.util.Map<String, Object>) respuesta.getDatos();
+            Integer userId = usuarioServicio.buscarIdPorCorreo(principal.getName());
+            if (userId != null) {
+                long totalMascotas = mascotaServicio.contarMascotasPorCliente(userId);
+                datos.put("totalMascotas", totalMascotas);
+            }
+        }
+
+        return ResponseEntity.ok(respuesta);
+    }
+
+    /**
+     * Actualiza los datos editables del perfil del cliente autenticado.
+     */
+    @PutMapping("/perfil")
+    public ResponseEntity<RespuestaApi> actualizarPerfil(
+            @Valid @RequestBody ActualizarPerfilSolicitud solicitud) {
+        return ResponseEntity.ok(usuarioServicio.actualizarPerfil(solicitud));
+    }
+
+    /**
+     * Cambia la contrasena del cliente autenticado.
+     * La contrasena actual se requiere como verificacion.
+     */
+    @PutMapping("/perfil/cambiar-contrasena")
+    public ResponseEntity<RespuestaApi> cambiarContrasena(
+            @Valid @RequestBody CambiarContrasenaSolicitud solicitud) {
+        return ResponseEntity.ok(usuarioServicio.cambiarContrasena(solicitud));
     }
 }
