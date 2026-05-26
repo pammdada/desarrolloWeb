@@ -1,1 +1,72 @@
-<p>admin works!</p>
+<div class="container">
+    <h1>Panel de Administrador</h1>
+
+    <div class="header-actions">
+        <button class="btn btn-danger" (click)="logout()">Cerrar Sesion</button>
+    </div>
+
+    <div class="card">
+        <div class="filter-section">
+            <label>Filtrar por estado:</label>
+            <select [(ngModel)]="filterStatus" (change)="cargarVeterinarios()">
+                <option value="ACTIVO">Activos</option>
+                <option value="INACTIVO">Inactivos</option>
+            </select>
+
+            <button class="btn btn-primary" (click)="showForm = !showForm">
+                {{ showForm ? 'Cancelar' : 'Nuevo Veterinario' }}
+            </button>
+        </div>
+
+        <!-- Formulario de registro -->
+        <div *ngIf="showForm" class="form-card">
+            <h3>Registrar Veterinario</h3>
+            <div class="form-row">
+                <input type="text" [(ngModel)]="vetForm.nombre" placeholder="Nombre">
+                <input type="text" [(ngModel)]="vetForm.apellidos" placeholder="Apellidos">
+            </div>
+            <input type="email" [(ngModel)]="vetForm.correo" placeholder="Correo">
+            <input type="password" [(ngModel)]="vetForm.contrasena" placeholder="Contraseña">
+            <input type="text" [(ngModel)]="vetForm.especialidad" placeholder="Especialidad">
+            <div class="form-row">
+                <input type="number" [(ngModel)]="vetForm.sueldo" placeholder="Sueldo">
+                <input type="text" [(ngModel)]="vetForm.telefono" placeholder="Telefono">
+            </div>
+            <button class="btn btn-primary" (click)="createVet()">Guardar</button>
+        </div>
+
+        <!-- Tabla de veterinarios -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Especialidad</th>
+                    <th>Sueldo</th>
+                    <th>Telefono</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let vet of veterinarians">
+                    <td>{{ vet.nombre }}</td>
+                    <td>{{ vet.apellidos }}</td>
+                    <td>{{ vet.especialidad }}</td>
+                    <td>S/ {{ vet.sueldo }}</td>
+                    <td>{{ vet.telefono }}</td>
+                    <td>
+                        <span [class]="'status-' + (vet.estadoVet?.toLowerCase() || 'activo')">
+                            {{ vet.estadoVet || 'ACTIVO' }}
+                        </span>
+                    </td>
+                    <td>
+                        <button *ngIf="vet.estadoVet !== 'INACTIVO'" class="btn btn-danger" (click)="fireVet(vet.id)">
+                            Despedir
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -161,12 +161,6 @@ public class CitaService {
         if (!"PENDIENTE".equals(cita.getEstado())) {
             return RespuestaApi.error("La cita no esta pendiente");
         }
-
-        cita.setFecha(cita.getNuevaFecha());
-        cita.setHora(cita.getNuevaHora());
-        cita.setEstado("ACEPTADA");
-        cita.setNuevaFecha(null);
-        cita.setNuevaHora(null);
         cita.setVeterinario(veterinario);
         cita.setEstado("ACEPTADA");
         citaRepository.save(cita);

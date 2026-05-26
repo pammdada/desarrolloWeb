@@ -1,0 +1,42 @@
+.header-actions {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.filter-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-section select {
+    width: auto;
+    margin-bottom: 0;
+}
+
+.form-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row input {
+    flex: 1;
+}
+
+.status-activo {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.status-inactivo {
+    color: #f44336;
+    font-weight: bold;
+}
