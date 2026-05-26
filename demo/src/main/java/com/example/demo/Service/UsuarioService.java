@@ -17,7 +17,10 @@ import com.example.demo.Model.Usuario;
 import com.example.demo.Repository.TokenRepository;
 import com.example.demo.Repository.UsuarioRepository;
 
+import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -28,6 +31,8 @@ public class UsuarioService {
     private final TokenRepository tokenRepositorio;
     private final CorreoService correoServicio;
     private final PasswordEncoder codificadorPassword;
+
+    private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     private final java.util.Map<String, RegistroClienteSolicitud> registrosPendientes = new java.util.HashMap<>();
 
@@ -119,7 +124,7 @@ public class UsuarioService {
         return RespuestaApi.exito("Registro completado exitosamente", null);
     }
 
-    public RespuestaApi login(LoginSolicitud solicitud, HttpServletRequest request) {
+    public RespuestaApi login(LoginSolicitud solicitud, HttpServletRequest request, HttpServletResponse response) {
         System.out.println("=== LOGIN DEBUG ===");
         System.out.println("Correo recibido: [" + solicitud.getCorreo() + "]");
         System.out.println("Contrasena recibida: [" + solicitud.getContrasena() + "]");
@@ -174,9 +179,11 @@ public class UsuarioService {
         org.springframework.security.core.context.SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
 
-        jakarta.servlet.http.HttpSession session = request.getSession(true);
-        session.setAttribute("SPRING_SECURITY_CONTEXT",
-                org.springframework.security.core.context.SecurityContextHolder.getContext());
+        // Guardamos el contexto de seguridad en la sesion usando el repositorio oficial
+        // (garantiza que Spring Security lo restaure correctamente en peticiones siguientes)
+        securityContextRepository.saveContext(
+                org.springframework.security.core.context.SecurityContextHolder.getContext(),
+                request, response);
 
         System.out.println("SUCCESS: Login exitoso");
         return RespuestaApi.exito("Login exitoso", java.util.Map.of(

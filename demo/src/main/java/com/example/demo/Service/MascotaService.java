@@ -24,7 +24,7 @@ public class MascotaService {
     
     @Transactional
     public RespuestaApi registrarMascota(MascotaSolicitud solicitud, String correo) {
-        correo = SecurityContextHolder.getContext().getAuthentication().getName();
+        // Usamos el correo recibido del Principal en vez de SecurityContextHolder
         Usuario cliente = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
         
@@ -43,16 +43,16 @@ public class MascotaService {
                 .raza(solicitud.getRaza())
                 .edad(solicitud.getEdad())
                 .fotoUrl(solicitud.getFotoUrl())
-                .cliente(cliente)
                 .build();
         
         mascotaRepository.save(mascota);
         
-        return RespuestaApi.exito("Mascota registrada exitosamente", mascota);
+        // Retornamos solo datos seguros (evita serializar la entidad con @ManyToOne)
+        return RespuestaApi.exito("Mascota registrada exitosamente",
+                java.util.Map.of("id", mascota.getId(), "nombre", mascota.getNombre()));
     }
     
     public RespuestaApi listarMisMascotas(String correo) {
-        correo = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario cliente = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
         

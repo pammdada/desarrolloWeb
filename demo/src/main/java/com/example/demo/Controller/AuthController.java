@@ -38,8 +38,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<RespuestaApi> login(@Valid @RequestBody LoginSolicitud solicitud, jakarta.servlet.http.HttpServletRequest request) {
-        return ResponseEntity.ok(usuarioServicio.login(solicitud, request));
+    public ResponseEntity<RespuestaApi> login(@Valid @RequestBody LoginSolicitud solicitud,
+            jakarta.servlet.http.HttpServletRequest request,
+            jakarta.servlet.http.HttpServletResponse response) {
+        return ResponseEntity.ok(usuarioServicio.login(solicitud, request, response));
     }
 
     @PostMapping("/logout")
