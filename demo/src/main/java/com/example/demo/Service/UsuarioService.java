@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.DTO.ActualizarPerfilSolicitud;
+import com.example.demo.DTO.CambiarContrasenaSolicitud;
 import com.example.demo.DTO.LoginSolicitud;
 import com.example.demo.DTO.RegistroClienteSolicitud;
 import com.example.demo.DTO.RespuestaApi;
@@ -17,7 +19,10 @@ import com.example.demo.Model.Usuario;
 import com.example.demo.Repository.TokenRepository;
 import com.example.demo.Repository.UsuarioRepository;
 
+import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,7 +34,118 @@ public class UsuarioService {
     private final CorreoService correoServicio;
     private final PasswordEncoder codificadorPassword;
 
+    private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
+
     private final java.util.Map<String, RegistroClienteSolicitud> registrosPendientes = new java.util.HashMap<>();
+
+    /**
+     * Obtiene todos los datos del perfil del usuario autenticado,
+     * excluyendo informacion sensible como la contrasena.
+     * Usa HashMap mutable para que el controlador pueda agregar campos adicionales.
+     */
+    public RespuestaApi obtenerPerfilCompleto() {
+        // Obtiene el correo del usuario desde la sesion activa de Spring Security
+        String correo = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepositorio.findByCorreo(correo).orElse(null);
+
+        if (usuario == null) {
+            return RespuestaApi.error("No hay sesion activa");
+        }
+
+        // Retorna un HashMap mutable con todos los campos relevantes del perfil
+        java.util.Map<String, Object> datos = new java.util.HashMap<>();
+        datos.put("id", usuario.getId());
+        datos.put("correo", usuario.getCorreo());
+        datos.put("nombre", usuario.getNombre());
+        datos.put("apellidos", usuario.getApellidos() != null ? usuario.getApellidos() : "");
+        datos.put("telefono", usuario.getTelefono() != null ? usuario.getTelefono() : "");
+        datos.put("dni", usuario.getDni() != null ? usuario.getDni() : "");
+        datos.put("rol", usuario.getRol());
+        datos.put("activo", usuario.getActivo());
+        datos.put("creadoEn", usuario.getCreadoEn() != null ? usuario.getCreadoEn().toString() : "");
+
+        return RespuestaApi.exito("Perfil obtenido", datos);
+    }
+
+    /**
+     * Busca el ID de un usuario por su correo.
+     * Usado por el controlador para obtener datos relacionados (ej. conteo de mascotas).
+     */
+    public Integer buscarIdPorCorreo(String correo) {
+        Usuario usuario = usuarioRepositorio.findByCorreo(correo).orElse(null);
+        return usuario != null ? usuario.getId() : null;
+    }
+
+    /**
+     * Actualiza los datos editables del perfil del usuario autenticado.
+     * Solo se actualizan los campos que vienen en la solicitud.
+     */
+    @Transactional
+    public RespuestaApi actualizarPerfil(ActualizarPerfilSolicitud solicitud) {
+        String correo = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepositorio.findByCorreo(correo).orElse(null);
+
+        if (usuario == null) {
+            return RespuestaApi.error("No hay sesion activa");
+        }
+
+        // Actualiza el nombre si se proporciono uno nuevo
+        if (solicitud.getNombre() != null && !solicitud.getNombre().isBlank()) {
+            usuario.setNombre(solicitud.getNombre().trim());
+        }
+
+        // Actualiza los apellidos si se proporcionaron
+        if (solicitud.getApellidos() != null && !solicitud.getApellidos().isBlank()) {
+            usuario.setApellidos(solicitud.getApellidos().trim());
+        }
+
+        // Actualiza el telefono si se proporciono
+        if (solicitud.getTelefono() != null) {
+            usuario.setTelefono(solicitud.getTelefono().trim());
+        }
+
+        // Actualiza el DNI si se proporciono uno diferente al actual
+        if (solicitud.getDni() != null && !solicitud.getDni().equals(usuario.getDni())) {
+            // Verifica que el nuevo DNI no este en uso por otro usuario
+            if (usuarioRepositorio.existsByDni(solicitud.getDni().trim())) {
+                return RespuestaApi.error("El DNI ya esta registrado por otro usuario");
+            }
+            usuario.setDni(solicitud.getDni().trim());
+        }
+
+        usuarioRepositorio.save(usuario);
+
+        // Retorna el perfil actualizado completo
+        return obtenerPerfilCompleto();
+    }
+
+    /**
+     * Cambia la contrasena del usuario autenticado.
+     * La contrasena actual se usa como token de verificacion de identidad.
+     */
+    @Transactional
+    public RespuestaApi cambiarContrasena(CambiarContrasenaSolicitud solicitud) {
+        String correo = org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getName();
+        Usuario usuario = usuarioRepositorio.findByCorreo(correo).orElse(null);
+
+        if (usuario == null) {
+            return RespuestaApi.error("No hay sesion activa");
+        }
+
+        // Verifica que la contrasena actual sea correcta (funciona como token)
+        if (!codificadorPassword.matches(solicitud.getContrasenaActual(), usuario.getContrasena())) {
+            return RespuestaApi.error("La contrasena actual no es correcta");
+        }
+
+        // Actualiza a la nueva contrasena
+        usuario.setContrasena(codificadorPassword.encode(solicitud.getNuevaContrasena()));
+        usuarioRepositorio.save(usuario);
+
+        return RespuestaApi.exito("Contrasena actualizada exitosamente", null);
+    }
 
     @Transactional
     public RespuestaApi registrarCliente(RegistroClienteSolicitud solicitud) {
@@ -119,7 +235,7 @@ public class UsuarioService {
         return RespuestaApi.exito("Registro completado exitosamente", null);
     }
 
-    public RespuestaApi login(LoginSolicitud solicitud, HttpServletRequest request) {
+    public RespuestaApi login(LoginSolicitud solicitud, HttpServletRequest request, HttpServletResponse response) {
         System.out.println("=== LOGIN DEBUG ===");
         System.out.println("Correo recibido: [" + solicitud.getCorreo() + "]");
         System.out.println("Contrasena recibida: [" + solicitud.getContrasena() + "]");
@@ -174,9 +290,11 @@ public class UsuarioService {
         org.springframework.security.core.context.SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
 
-        jakarta.servlet.http.HttpSession session = request.getSession(true);
-        session.setAttribute("SPRING_SECURITY_CONTEXT",
-                org.springframework.security.core.context.SecurityContextHolder.getContext());
+        // Guardamos el contexto de seguridad en la sesion usando el repositorio oficial
+        // (garantiza que Spring Security lo restaure correctamente en peticiones siguientes)
+        securityContextRepository.saveContext(
+                org.springframework.security.core.context.SecurityContextHolder.getContext(),
+                request, response);
 
         System.out.println("SUCCESS: Login exitoso");
         return RespuestaApi.exito("Login exitoso", java.util.Map.of(

@@ -50,10 +50,16 @@ public class CitaService {
             return RespuestaApi.error("La fecha debe ser desde manana en adelante");
         }
 
-        LocalTime horaMinima = LocalTime.of(8, 0);
-        LocalTime horaMaxima = LocalTime.of(23, 0);
+        LocalTime horaMinima = LocalTime.of(9, 0);
+        LocalTime horaMaxima = LocalTime.of(22, 0);
         if (solicitud.getHora().isBefore(horaMinima) || solicitud.getHora().isAfter(horaMaxima)) {
-            return RespuestaApi.error("La hora debe estar entre 08:00 y 23:00");
+            return RespuestaApi.error("La hora debe estar entre 09:00 y 22:00");
+        }
+
+        // Valida que no exista una cita duplicada para la misma mascota en la misma fecha y hora
+        if (citaRepository.existsByMascotaIdAndFechaAndHora(
+                solicitud.getMascotaId().intValue(), solicitud.getFecha(), solicitud.getHora())) {
+            return RespuestaApi.error("Ya tienes una cita agendada para esa mascota en esa fecha y hora");
         }
 
         Cita cita = Cita.builder()

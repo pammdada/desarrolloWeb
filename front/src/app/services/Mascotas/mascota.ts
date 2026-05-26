@@ -10,8 +10,8 @@ export class Mascota {
 
   constructor(private http: HttpClient) {}
 
-  listarPorCliente(clienteId: string): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, { withCredentials: true });
+  listarPorCliente(clienteId: string): Observable<any> {
+    return this.http.get<any>(this.apiUrl, { withCredentials: true });
   }
 
   registrar(mascota: any): Observable<any> {

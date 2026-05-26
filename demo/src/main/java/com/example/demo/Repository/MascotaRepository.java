@@ -13,4 +13,7 @@ public interface MascotaRepository extends JpaRepository<Mascota, Long> {
     List<Mascota> findByClienteId(Integer clienteId);
 
     boolean existsByClienteIdAndNombre(Integer clienteId, String nombre);
+
+    // Cuenta cuantas mascotas tiene un cliente, usado en la seccion de perfil
+    long countByClienteId(Integer clienteId);
 }

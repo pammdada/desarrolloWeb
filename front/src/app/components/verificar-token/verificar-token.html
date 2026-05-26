@@ -25,5 +25,13 @@
         <button type="submit" [disabled]="form.invalid" class="w-full flex justify-center rounded-md bg-green-500 px-4 py-2 text-white">Verificar</button>
       </div>
     </form>
+
+    <!--  Enlace directo a Iniciar Sesión sin pasar por home -->
+    <p class="mt-6 text-center text-sm text-gray-500">
+      <a (click)="irALogin()" class="font-semibold text-green-500 hover:text-green-600 cursor-pointer">
+        Volver a Iniciar Sesión
+      </a>
+    </p>
+
   </div>
 </div>

@@ -8,6 +8,7 @@ import { Registro } from './components/registro/registro';
 import { AgendarCita } from './components/agendar-cita/agendar-cita';
 import { RegistrarMascota } from './components/registrar-mascota/registrar-mascota';
 import { VerificarToken } from './components/verificar-token/verificar-token';
+import { Perfil } from './components/perfil/perfil';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -19,5 +20,6 @@ export const routes: Routes = [
   { path: 'veterinario', component: Veterinario },
   { path: 'agendar-cita', component: AgendarCita },
   { path: 'registrar-mascota', component: RegistrarMascota },
+  { path: 'perfil', component: Perfil },
   { path: '**', redirectTo: '' }
 ];
