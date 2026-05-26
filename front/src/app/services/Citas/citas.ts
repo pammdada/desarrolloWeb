@@ -6,24 +6,49 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class Citas {
-  // Cambio: URL corregida a /api/cliente (coincide con ClienteController.java)
-  private apiUrl = 'http://localhost:8080/api/cliente';
-  // Cambio: agregado withCredentials para enviar la cookie de sesion (JSESSIONID)
+  private apiClienteUrl = 'http://localhost:8080/api/cliente';
+  private apiVeterinarioUrl = 'http://localhost:8080/api/veterinario';
   private httpOptions = { withCredentials: true };
 
   constructor(private http: HttpClient) {}
 
-  // Cambio: ruta corregida a /citas (POST en ClienteController)
+  // Métodos para clientes
   agendarCita(cita: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/citas`, cita, this.httpOptions);
+    return this.http.post(`${this.apiClienteUrl}/citas`, cita, this.httpOptions);
   }
 
-  listarPendientes(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/citas/pendientes`, this.httpOptions);
+  misCitas(): Observable<any> {
+    return this.http.get<any>(`${this.apiClienteUrl}/citas`, this.httpOptions);
   }
-  
+
+  aceptarReagendacion(citaId: number): Observable<any> {
+    return this.http.patch(`${this.apiClienteUrl}/citas/${citaId}/aceptar-reagendacion`, {}, this.httpOptions);
+  }
+
+  rechazarReagendacion(citaId: number): Observable<any> {
+    return this.http.patch(`${this.apiClienteUrl}/citas/${citaId}/rechazar-reagendacion`, {}, this.httpOptions);
+  }
+
+  // Métodos para veterinarios
+  listarPendientes(): Observable<any> {
+    return this.http.get<any>(`${this.apiVeterinarioUrl}/citas/pendientes`, this.httpOptions);
+  }
+
+  aceptarCita(citaId: number): Observable<any> {
+    return this.http.patch(`${this.apiVeterinarioUrl}/citas/${citaId}/aceptar`, {}, this.httpOptions);
+  }
+
+  rechazarCita(citaId: number): Observable<any> {
+    return this.http.patch(`${this.apiVeterinarioUrl}/citas/${citaId}/rechazar`, {}, this.httpOptions);
+  }
+
   actualizarEstado(citaId: number, nuevoEstado: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/citas/${citaId}/estado`, { estado: nuevoEstado }, this.httpOptions);
+    if (nuevoEstado === 'ACEPTADA') {
+      return this.aceptarCita(citaId);
+    } else if (nuevoEstado === 'RECHAZADA') {
+      return this.rechazarCita(citaId);
+    }
+    return this.http.patch(`${this.apiVeterinarioUrl}/citas/${citaId}/${nuevoEstado.toLowerCase()}`, {}, this.httpOptions);
   }
 
 }

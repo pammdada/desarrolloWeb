@@ -19,7 +19,7 @@
                 <thead class="bg-green-100 uppercase text-sm text-gray-600">
                     <tr>
                         <th class="p-4">Mascota</th>
-                        <th class="p-4">Motivo</th>
+                        <th class="p-4">Problema</th>
                         <th class="p-4">Fecha y Hora</th>
                         <th class="p-4 text-center">Acciones</th>
                     </tr>
@@ -27,8 +27,8 @@
                 <tbody class="divide-y divide-gray-200">
                     <tr *ngFor="let cita of citasPendientes" class="hover:bg-blue-50 transition">
                         <td class="p-4 font-medium text-gray-900">{{ cita.mascota?.nombre }}</td>
-                        <td class="p-4 text-gray-600">{{ cita.motivo }}</td>
-                        <td class="p-4 text-gray-600">{{ cita.fechaHora | date:'short' }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.problema }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.fecha | date:'dd/MM/yyyy' }} - {{ cita.hora }}</td>
                         <td class="p-4 flex justify-center gap-3">
                             <button (click)="gestionarCita(cita, 'ACEPTADA')"
                                 class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">

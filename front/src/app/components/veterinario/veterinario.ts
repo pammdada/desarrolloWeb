@@ -21,8 +21,15 @@ export class Veterinario {
 
   obtenerCitasPendientes() {
     this.citas.listarPendientes().subscribe({
-      next: (data) => {
-        this.citasPendientes = data;
+      next: (response) => {
+        console.log('Respuesta completa:', response);
+        if (response && response.datos) {
+          this.citasPendientes = response.datos;
+          console.log('Citas cargadas:', this.citasPendientes);
+        } else {
+          this.citasPendientes = [];
+          console.warn('No hay datos en la respuesta');
+        }
       },
       error: (err) => {
         console.error('Error al obtener citas pendientes', err);
@@ -66,15 +73,24 @@ export class Veterinario {
 
   actualizarEstadoCita(id: number, estado: string) {
     this.citas.actualizarEstado(id, estado).subscribe({
-      next: () => {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: `Cita ${estado.toLowerCase()} correctamente`,
-          showConfirmButton: false,
-          timer: 1500
-        });
-        this.obtenerCitasPendientes();
+      next: (response) => {
+        if (response && response.exito) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `Cita ${estado.toLowerCase()} correctamente`,
+            showConfirmButton: false,
+            timer: 1500
+          });
+          this.obtenerCitasPendientes();
+        } else {
+          console.error('Error en la respuesta:', response?.mensaje);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: response?.mensaje || "No se pudo actualizar la cita"
+          });
+        }
       },
       error: (err) => {
         console.error(`Error al ${estado.toLowerCase()} la cita`, err);
