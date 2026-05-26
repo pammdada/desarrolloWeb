@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 import { Mascota } from '../../services/Mascotas/mascota';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registrar-mascota',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './registrar-mascota.html',
   styleUrl: './registrar-mascota.css'
 })
