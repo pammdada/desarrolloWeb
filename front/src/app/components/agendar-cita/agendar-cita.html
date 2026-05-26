@@ -7,7 +7,7 @@
         <form (ngSubmit)="enviarCita()" class="p-6 space-y-4">
 
             <div>
-                <label class="block text-sm font-medium text-gray-700">¿Para qué mascota?</label>
+                <label class="block text-sm font-medium text-gray-700">Para que mascota?</label>
                 <select name="mascota" [(ngModel)]="cita.mascota" required
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2 border">
                     <option [ngValue]="null" disabled>Selecciona una mascota</option>
@@ -15,19 +15,22 @@
                         {{ m.nombre }} ({{ m.tipo }})
                     </option>
                 </select>
+                <small *ngIf="errores.mascota" class="text-red-500 text-xs">{{ errores.mascota }}</small>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Fecha y Hora</label>
-                <input type="datetime-local" name="fechaHora" [(ngModel)]="cita.fechaHora" required
+                <input type="datetime-local" name="fechaHora" [(ngModel)]="cita.fechaHora" (input)="validarFechaHora()" required
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2 border">
+                <small *ngIf="errores.fechaHora" class="text-red-500 text-xs">{{ errores.fechaHora }}</small>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Motivo de la consulta</label>
-                <textarea name="motivo" [(ngModel)]="cita.motivo" rows="3"
+                <textarea name="motivo" [(ngModel)]="cita.motivo" (input)="validarMotivo()" rows="3"
                     placeholder="Ej: Tiene tos o le toca vacuna..."
                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2 border"></textarea>
+                <small *ngIf="errores.motivo" class="text-red-500 text-xs">{{ errores.motivo }}</small>
             </div>
 
             <div class="flex gap-3 pt-4">
