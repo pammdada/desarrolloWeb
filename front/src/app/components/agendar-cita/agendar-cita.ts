@@ -46,32 +46,45 @@ export class AgendarCita implements OnInit {
       return;
     }
 
+    // Cambio: se parsea el datetime-local a fecha (YYYY-MM-DD) y hora (HH:mm)
+    // para coincidir con CitaSolicitud.java que espera LocalDate + LocalTime separados
+    const dateTimeValue: string = this.cita.fechaHora;
+    if (!dateTimeValue) {
+      alert('Selecciona una fecha y hora');
+      return;
+    }
+    const partes = dateTimeValue.split('T');
+    const fecha = partes[0];
+    const hora = partes[1] + ':00';
+
+    // Cambio: estructura corregida para coincidir con CitaSolicitud.java:
+    // - mascotaId (Long) en vez de mascota: { id }
+    // - fecha + hora separados en vez de fechaHora combinado
+    // - problema en vez de motivo
+    // - se elimina veterinario (no lo espera CitaSolicitud)
     const datosParaJava = {
-    fechaHora: this.cita.fechaHora, 
-    estado: "PENDIENTE",
-    motivo: this.cita.motivo,
-    mascota: { id: this.cita.mascota.id },
-    veterinario: { id: 20} 
+      mascotaId: this.cita.mascota.id,
+      fecha: fecha,
+      hora: hora,
+      problema: this.cita.motivo
     };
-    
+
     const usuarioAc = localStorage.getItem('currentUser');
-    if(usuarioAc) {
-      const usuario = JSON.parse(usuarioAc);
-      const clienteId = usuario.id;
+    if (usuarioAc) {
       this.citas.agendarCita(datosParaJava).subscribe({
-      next: (res) => {
+        next: (res) => {
           Swal.fire({
             position: "top-end",
             icon: "success",
-            title: "¡Cita confirmada!",
+            title: "Cita confirmada!",
             showConfirmButton: false,
             timer: 1500,
           });
-        this.router.navigate(['/cliente']);
-      },
-      error: (err) => {
-        console.error('Error al agendar cita:', err);
-      }
+          this.router.navigate(['/cliente']);
+        },
+        error: (err) => {
+          console.error('Error al agendar cita:', err);
+        }
       });
     }
   }
