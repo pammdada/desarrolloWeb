@@ -31,7 +31,7 @@ export class AgendarCita implements OnInit {
       const clienteId = usuario.id;
 
       this.Mascota.listarPorCliente(clienteId).subscribe((data) => {
-        this.listaMascotas = data;
+        this.listaMascotas = data.datos || data;
       },
         (error) => {
           console.error('Error al cargar mascotas', error);
