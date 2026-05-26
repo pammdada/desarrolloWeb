@@ -31,12 +31,15 @@ export class RegistrarMascota {
       const usuarioObj = JSON.parse(usuario);
       this.nuevaMascota.cliente = { id: Number(usuarioObj.id) };
 
+      // Se convierte el tipo a mayúsculas antes de enviarlo al backend
+      const tipoUpper = this.nuevaMascota.tipo.toUpperCase();
+
       mascotaParaJava = {
         nombre: this.nuevaMascota.nombre,
-        tipo: this.nuevaMascota.tipo,
+        tipo: tipoUpper,
         raza: this.nuevaMascota.raza,
         edad: this.nuevaMascota.edad,
-        fotoUrl: this.nuevaMascota.fotoUrl || null,
+        fotoUrl: this.nuevaMascota.fotoUrl || "null",
         clienteId: Number(usuarioObj.id)
       };
 

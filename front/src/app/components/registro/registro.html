@@ -2,7 +2,7 @@
 
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <h2 class="mt-10 text-center text-2xl font-bold tracking-tight text-gray-900">
-      🐾 Crear cuenta
+       Crear cuenta
     </h2>
   </div>
 
@@ -10,66 +10,119 @@
 
     <form (ngSubmit)="onRegistro()" #form="ngForm" class="space-y-6">
 
+      <!-- NOMBRES -->
       <div>
         <label class="block text-sm font-medium text-gray-900">
           Nombre completo
         </label>
-
         <input type="text"
                name="nombres"
                [(ngModel)]="nuevoUsuario.nombres"
                required
                placeholder="Tu nombre"
                class="mt-2 block w-full rounded-md bg-white px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <!--  Mensaje de error para nombres -->
+        <small *ngIf="errores.nombres" class="text-red-500 text-xs">{{ errores.nombres }}</small>
       </div>
 
+      <!--  APELLIDOS -->
       <div>
         <label class="block text-sm font-medium text-gray-900">
           Apellidos
         </label>
-
         <input type="text"
                name="apellidos"
                [(ngModel)]="nuevoUsuario.apellidos"
                required
                placeholder="Tu apellido"
                class="mt-2 block w-full rounded-md bg-white px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <small *ngIf="errores.apellidos" class="text-red-500 text-xs">{{ errores.apellidos }}</small>
       </div>
 
+      <!--  CORREO -->
       <div>
         <label class="block text-sm font-medium text-gray-900">
           Correo Electrónico
         </label>
-
         <input type="email"
                name="correo"
                [(ngModel)]="nuevoUsuario.correo"
                required
                placeholder="correo@ejemplo.com"
                class="mt-2 block w-full rounded-md bg-white px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <small *ngIf="errores.correo" class="text-red-500 text-xs">{{ errores.correo }}</small>
       </div>
 
+      <!--  CONTRASEÑA -->
       <div>
         <label class="block text-sm font-medium text-gray-900">
           Contraseña
         </label>
-
         <input type="password"
                name="contrasena"
                [(ngModel)]="nuevoUsuario.contrasena"
+               (input)="actualizarChecksContrasena()"
                required
                placeholder="********"
                class="mt-2 block w-full rounded-md bg-white px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <small *ngIf="errores.contrasena" class="text-red-500 text-xs">{{ errores.contrasena }}</small>
+
+        <!-- Lista de requisitos de contraseña en tiempo real (check cambia de color) -->
+        <ul class="mt-2 space-y-1 text-xs">
+          <li [class.text-green-600]="passwordChecks.longitud" [class.text-gray-400]="!passwordChecks.longitud">
+            <span [class.text-green-600]="passwordChecks.longitud" [class.text-gray-400]="!passwordChecks.longitud">✓</span>
+            Mínimo 8 caracteres
+          </li>
+          <li [class.text-green-600]="passwordChecks.mayuscula" [class.text-gray-400]="!passwordChecks.mayuscula">
+            <span [class.text-green-600]="passwordChecks.mayuscula" [class.text-gray-400]="!passwordChecks.mayuscula">✓</span>
+            Al menos una mayúscula
+          </li>
+          <li [class.text-green-600]="passwordChecks.minuscula" [class.text-gray-400]="!passwordChecks.minuscula">
+            <span [class.text-green-600]="passwordChecks.minuscula" [class.text-gray-400]="!passwordChecks.minuscula">✓</span>
+            Al menos una minúscula
+          </li>
+          <li [class.text-green-600]="passwordChecks.numero" [class.text-gray-400]="!passwordChecks.numero">
+            <span [class.text-green-600]="passwordChecks.numero" [class.text-gray-400]="!passwordChecks.numero">✓</span>
+            Al menos un número
+          </li>
+          <li [class.text-green-600]="passwordChecks.especial" [class.text-gray-400]="!passwordChecks.especial">
+            <span [class.text-green-600]="passwordChecks.especial" [class.text-gray-400]="!passwordChecks.especial">✓</span>
+            Al menos un carácter especial (!@#$%^&*)
+          </li>
+        </ul>
       </div>
 
+      <!--  CONFIRMAR CONTRASEÑA (nuevo campo) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-900">
+          Confirmar Contraseña
+        </label>
+        <input type="password"
+               name="confirmarContrasena"
+               [(ngModel)]="confirmarContrasena"
+               required
+               placeholder="Repite tu contraseña"
+               class="mt-2 block w-full rounded-md bg-white px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
+        <small *ngIf="errores.confirmarContrasena" class="text-red-500 text-xs">{{ errores.confirmarContrasena }}</small>
+      </div>
+
+      <!--  BOTÓN REGISTRARSE -->
       <div>
         <button type="submit"
-                [disabled]="form.invalid"
-                class="w-full flex justify-center rounded-md bg-green-500 hover:bg-green-600 px-4 py-2 font-semibold text-white shadow-md disabled:bg-gray-400">
+                class="w-full flex justify-center rounded-md bg-green-500 hover:bg-green-600 px-4 py-2 font-semibold text-white shadow-md">
           Registrarse
         </button>
       </div>
 
     </form>
+
+    <!--  Enlace directo a Iniciar Sesión (sin pasar por home) -->
+    <p class="mt-6 text-center text-sm text-gray-500">
+      ¿Ya tienes cuenta?
+      <a (click)="irALogin()" class="font-semibold text-green-500 hover:text-green-600 cursor-pointer">
+        Inicia sesión
+      </a>
+    </p>
+
   </div>
 </div>

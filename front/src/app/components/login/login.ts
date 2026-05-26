@@ -16,6 +16,11 @@ export class Login {
 
   constructor(private autenticacion: autenticacion, private router: Router) {}
 
+  //  Navega directamente al formulario de registro sin pasar por home
+  irARegistro() {
+    this.router.navigate(['/registro']);
+  }
+
   onLogin() {
     const credentials = {
       correo: this.credentials.correo.trim().toLowerCase(),

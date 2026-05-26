@@ -39,7 +39,7 @@ public class MascotaService {
         Mascota mascota = Mascota.builder()
                 .cliente(cliente)
                 .nombre(solicitud.getNombre())
-                .tipo(solicitud.getTipo())
+                .tipo(solicitud.getTipo().toUpperCase()) //  Se convierte a mayúsculas para uniformidad
                 .raza(solicitud.getRaza())
                 .edad(solicitud.getEdad())
                 .fotoUrl(solicitud.getFotoUrl())
