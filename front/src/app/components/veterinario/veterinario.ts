@@ -181,4 +181,23 @@ export class Veterinario {
       }
     });
   }
+
+  cerrarSesion() {
+    Swal.fire({
+      title: "Cerrar sesión",
+      text: "Salir del panel de veterinario.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "rgb(39, 204, 75)",
+      confirmButtonText: "Cerrar sesión",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        //Aquí cierra sesión y te dirige a la pantalla de inicio.
+        this.authService.logout();
+        this.router.navigate(['/home']);
+      };
+    });
+  }
 }

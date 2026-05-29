@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { autenticacion } from '../../services/Autenticacion/autenticacion';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -30,13 +31,20 @@ export class Login {
     this.autenticacion.login(credentials).subscribe({
       next: (res: any) => {
         if (res?.exito === false) {
-          alert('Error de autenticación: ' + (res.mensaje || res.message || 'Credenciales incorrectas'));
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: ("Credenciales incorrectas, intente de nuevo."),
+          });
           return;
         }
 
         const user = res.datos ?? res.data;
         if (!user) {
-          alert('Error de autenticación: respuesta inválida del servidor');
+          Swal.fire({
+            icon: "error",
+            text: "Error de autenticación: respuesta inválida del servidor",
+          });
           return;
         }
 
@@ -51,8 +59,11 @@ export class Login {
         }
       },
       error: (err: any) => {
-        const mensaje = err.error?.mensaje || err.error?.message || 'Credenciales incorrectas';
-        alert('Error de autenticación: ' + mensaje);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Credenciales incorrectas, intente de nuevo.",
+        });
       },
     });
   }
