@@ -175,11 +175,24 @@ export class Admin implements OnInit {
     }, 400);
   }
 
-  // cierra sesion y redirige al login
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+  logout() {
+      Swal.fire({
+        title: "Cerrar sesión",
+        text: "Salir del panel de administrador.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "rgb(39, 204, 75)",
+        confirmButtonText: "Cerrar sesión",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //Aquí cierra sesión y te dirige a la pantalla de inicio.
+          this.authService.logout();
+          this.router.navigate(['/home']);
+        };
+      });
+    }
 
   // reinicia los valores del formulario a su estado inicial
   resetForm(): void {
