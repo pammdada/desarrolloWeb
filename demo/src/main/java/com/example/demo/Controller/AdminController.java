@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class AdminControlador {
+public class AdminController {
     
     private final VeterinarioService veterinarioServicio;
     

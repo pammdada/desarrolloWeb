@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('VETERINARIO')")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class VeterinarioControlador {
+public class VeterinarioController {
     
     private final CitaService CitaService;
     
