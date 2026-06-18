@@ -91,6 +91,10 @@ export class Admin implements OnInit {
     this.showForm = !this.showForm;
   }
 
+  servicios(){
+    this.router.navigate(['/servicios']);
+  }
+
   // envia los datos del formulario al backend para crear un veterinario
   createVet(): void {
     this.adminService.createVeterinario(this.vetForm).subscribe({

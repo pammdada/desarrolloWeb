@@ -7,9 +7,11 @@
         <div class="flex gap-4">
             <!-- Usuario: enlace al perfil al hacer click en el nombre -->
             <a routerLink="/perfil"
-               class="flex items-center gap-1 bg-green-500 border-2 border-green-700 rounded-full px-3 py-2 hover:bg-green-600 transition cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 text-white">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21c-2.676 0-5.216-.584-7.499-1.882z" />
+                class="flex items-center gap-1 bg-green-500 border-2 border-green-700 rounded-full px-3 py-2 hover:bg-green-600 transition cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6 text-white">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21c-2.676 0-5.216-.584-7.499-1.882z" />
                 </svg>
 
                 <div class="text-white font-bold">
@@ -18,10 +20,12 @@
             </a>
 
             <!-- Logout -->
-            <button (click)="cerrarSesionUsuario()" 
+            <button (click)="cerrarSesionUsuario()"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3h12.75" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3h12.75" />
                 </svg>
                 Cerrar Sesión
             </button>
@@ -37,16 +41,18 @@
             Bienvenido <span class="text-green-500">{{ nombreUsuario }}</span>
         </h1>
         <div class="flex justify-center mt-5 gap-4">
-            <button 
-            routerLink="/agendar-cita" 
-            class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" >
+            <button routerLink="/agendar-cita"
+                class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
                 Pedir una cita
             </button>
-            <button 
-            routerLink="/registrar-mascota" 
-            class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300" >
+            <button routerLink="/registrar-mascota"
+                class="btn-cta bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
                 Registrar Mascota
             </button>
+            <button (click)="pagos()" routerLinkActive="bg-green-50 text-green-700"
+            class="flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-600 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition duration-200">
+            <span>Gestionar Servicios</span>
+          </button>
         </div>
     </div>
 </div>
