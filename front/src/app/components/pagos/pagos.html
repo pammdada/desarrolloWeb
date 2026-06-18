@@ -1,0 +1,105 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">✨ Servicios Disponibles</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div *ngFor="let serv of servicios"
+                class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+                <div>
+                    <span
+                        class="px-2.5 py-1 bg-green-50 text-green-700 rounded-lg text-xs font-bold uppercase tracking-wider">Servicio</span>
+                    <h3 class="text-lg font-bold text-gray-900 mt-2">{{ serv.nombre }}</h3>
+                    <p class="text-gray-500 text-sm mt-1 mb-4">{{ serv.descripcion || 'Sin descripción detallada
+                        disponible.' }}</p>
+                </div>
+                <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                    <span class="text-xl font-extrabold text-green-600">S/. {{ serv.precio | number:'1.2-2' }}</span>
+                    <button (click)="abrirPasarela(serv)"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs transition">
+                        Elegir y Pagar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="mostrarModalPago"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+        <div
+            class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-gray-100 relative max-h-[90vh] overflow-y-auto scrollbar-thin">
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-gray-800">Pasarela de Pago</h2>
+                <button (click)="cerrarPasarela()"
+                    class="text-gray-400 hover:text-gray-600 font-bold text-lg">✕</button>
+            </div>
+
+            <p class="text-sm text-gray-600 mb-4">Estás adquiriendo: <span class="font-bold text-gray-900">{{
+                    servicioSeleccionado?.nombre }}</span> por el monto de <span class="text-green-600 font-bold">S/. {{
+                    servicioSeleccionado?.precio }}</span>.</p>
+
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">¿Dónde o cómo deseas pagar?</label>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button (click)="metodoSeleccionado = 'LOCAL'" [class.border-green-600]="metodoSeleccionado === 'LOCAL'"
+                    [class.bg-green-50]="metodoSeleccionado === 'LOCAL'"
+                    class="border border-gray-200 rounded-xl p-3 text-center transition group hover:border-gray-300">
+                    <span class="block text-lg">🏥</span>
+                    <span class="text-[11px] font-bold text-gray-700 block mt-1">En Local</span>
+                </button>
+                <button (click)="metodoSeleccionado = 'TARJETA'"
+                    [class.border-green-600]="metodoSeleccionado === 'TARJETA'"
+                    [class.bg-green-50]="metodoSeleccionado === 'TARJETA'"
+                    class="border border-gray-200 rounded-xl p-3 text-center transition group hover:border-gray-300">
+                    <span class="block text-lg">💳</span>
+                    <span class="text-[11px] font-bold text-gray-700 block mt-1">Tarjeta</span>
+                </button>
+                <button (click)="metodoSeleccionado = 'TRANSACCION'"
+                    [class.border-green-600]="metodoSeleccionado === 'TRANSACCION'"
+                    [class.bg-green-50]="metodoSeleccionado === 'TRANSACCION'"
+                    class="border border-gray-200 rounded-xl p-3 text-center transition group hover:border-gray-300">
+                    <span class="block text-lg">🏦</span>
+                    <span class="text-[11px] font-bold text-gray-700 block mt-1">Transacción</span>
+                </button>
+            </div>
+
+            <div *ngIf="metodoSeleccionado === 'TARJETA'"
+                class="p-4 bg-gray-50 rounded-xl border border-gray-100 mb-4 animate-fade-in">
+                <div class="mb-2">
+                    <label class="block text-[10px] font-bold text-gray-500 uppercase">Número de Tarjeta</label>
+                    <input type="text" [(ngModel)]="datosTarjeta.numero" placeholder="4557 •••• •••• 1234"
+                        class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none font-mono">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase">Expiración</label>
+                        <input type="text" [(ngModel)]="datosTarjeta.expiracion" placeholder="MM/AA"
+                            class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none text-center">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-gray-500 uppercase">CVC</label>
+                        <input type="password" [(ngModel)]="datosTarjeta.cvc" placeholder="•••"
+                            class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none text-center">
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="metodoSeleccionado === 'TRANSACCION'"
+                class="p-4 bg-gray-50 rounded-xl border border-gray-100 mb-4 animate-fade-in">
+                <p class="text-[11px] text-gray-600 font-medium mb-2 bg-white p-2 rounded-lg border border-gray-100">{{
+                    numeroCuentaClinica }}</p>
+                <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Sube la captura de tu
+                    Voucher</label>
+                <input type="file" (change)="onFileSelected($event)" accept="image/*"
+                    class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer">
+                <p *ngIf="voucherBase64" class="text-[10px] text-green-600 font-bold mt-1">✓ Captura cargada
+                    exitosamente</p>
+            </div>
+
+            <button (click)="procesarPago()" [disabled]="!metodoSeleccionado"
+                class="w-full mt-2 bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-200 disabled:text-gray-400 font-bold text-sm py-3 rounded-xl transition duration-200">
+                Confirmar y Finalizar
+            </button>
+
+        </div>
+    </div>
+</div>

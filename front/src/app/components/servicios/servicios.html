@@ -1,0 +1,79 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 animate-fade-in h-fit">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <span class="p-2 bg-green-50 text-green-600 rounded-lg text-sm">🛠️</span>
+                Nuevo Servicio
+            </h2>
+
+            <form (ngSubmit)="registrarServicio()">
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nombre del Servicio</label>
+                    <input type="text" [(ngModel)]="nuevoServicio.nombre" name="nombre" placeholder="Ej. Baño Completo"
+                        class="w-full border border-gray-200 rounded-xl p-2.5 text-sm bg-gray-50 focus:ring-2 focus:ring-green-500 focus:outline-none font-medium">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Descripción</label>
+                    <textarea [(ngModel)]="nuevoServicio.descripcion" name="descripcion"
+                        placeholder="Detalles de lo que incluye..." rows="3"
+                        class="w-full border border-gray-200 rounded-xl p-2.5 text-sm bg-gray-50 focus:ring-2 focus:ring-green-500 focus:outline-none font-medium"></textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Precio (S/.)</label>
+                    <input type="number" [(ngModel)]="nuevoServicio.precio" name="precio" placeholder="0.00"
+                        class="w-full border border-gray-200 rounded-xl p-2.5 text-sm bg-gray-50 focus:ring-2 focus:ring-green-500 focus:outline-none font-medium">
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-green-600 hover:bg-green-700 text-white font-bold text-sm py-3 rounded-xl transition duration-200 shadow-sm shadow-green-200">
+                    Guardar e Publicar
+                </button>
+            </form>
+        </div>
+
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">Servicios Ofrecidos actualmente</h2>
+
+            <div class="overflow-x-auto rounded-xl border border-gray-100">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase border-b border-gray-100">
+                            <th class="p-4">Servicio</th>
+                            <th class="p-4">Descripción</th>
+                            <th class="p-4 text-right">Precio</th>
+                            <th class="p-4 text-center">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-medium text-gray-700 divide-y divide-gray-50">
+                        <tr *ngFor="let serv of servicios" class="hover:bg-gray-50/70 transition">
+                            <td class="p-4 font-bold text-gray-900">{{ serv.nombre }}</td>
+                            <td class="p-4 text-gray-500 max-w-xs truncate">{{ serv.descripcion || 'Sin descripción' }}
+                            </td>
+                            <td class="p-4 text-right font-bold text-green-600">S/. {{ serv.precio | number:'1.2-2' }}
+                            </td>
+                            <td class="p-4 text-center">
+                                <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-green-100 text-green-700">
+                                    Activo
+                                </span>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let fixed of ['Baño', 'Corte', 'Seguro de Vida', 'PACK (BAÑO Y CORTE)']"
+                            class="hover:bg-gray-50/70 transition opacity-60">
+                            <td class="p-4 font-bold text-gray-900">{{ fixed }} (Fijo)</td>
+                            <td class="p-4 text-gray-400">Servicio estándar predefinido</td>
+                            <td class="p-4 text-right font-bold text-gray-500">Variable</td>
+                            <td class="p-4 text-center">
+                                <span
+                                    class="px-2.5 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-600">Sistema</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

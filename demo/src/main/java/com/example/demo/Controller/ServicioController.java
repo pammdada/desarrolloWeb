@@ -19,11 +19,10 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/servicios")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
-public class ServicioControlador {
+public class ServicioController {
 
     private final ServicioService servicioService;
 
-    // Cualquier usuario logueado (Cliente, Vet, Admin) puede ver la lista
     @GetMapping
     public ResponseEntity<RespuestaApi> listar() {
         return ResponseEntity.ok(RespuestaApi.exito(
@@ -32,7 +31,7 @@ public class ServicioControlador {
         ));
     }
 
-    // REGLA: Solo el Administrador puede agregar nuevos servicios a la BD
+
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RespuestaApi> crear(@RequestBody Servicio servicio) {
