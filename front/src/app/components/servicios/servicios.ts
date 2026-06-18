@@ -1,19 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { ServicioService, Servicio } from '../../services/Servicios/servicios'; 
 import Swal from 'sweetalert2';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-admin-servicios',
-  templateUrl: './admin-servicios.component.html'
+  selector: 'app-servicios',
+  imports: [DecimalPipe, FormsModule, CommonModule],
+  templateUrl: './servicios.html'
 })
-export class AdminServiciosComponent implements OnInit {
+export class Servicios implements OnInit {
   servicios: Servicio[] = [];
   loading: boolean = false;
 
   nuevoServicio: Servicio = {
     nombre: '',
     descripcion: '',
-    precio: null
+    precio: 0
   };
 
   constructor(private servicioService: ServicioService) {}
@@ -49,7 +52,7 @@ export class AdminServiciosComponent implements OnInit {
         if (response.exito) {
           Swal.fire('¡Éxito!', 'Servicio agregado correctamente', 'success');
           this.cargarServicios(); 
-          this.nuevoServicio = { nombre: '', descripcion: '', precio: null };
+          this.nuevoServicio = { nombre: '', descripcion: '', precio: 0 };
         }
       },
       error: (err) => {

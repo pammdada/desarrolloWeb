@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ServicioService, Servicio } from '../../services/servicio.service'; // Ajusta la ruta
+import { ServicioService, Servicio } from '../../services/Servicios/servicios'; 
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-cliente-pagos',
-  templateUrl: './cliente-pagos.component.html'
+  selector: 'app-pagos',
+  imports: [DecimalPipe, FormsModule, CommonModule],
+  templateUrl: './pagos.html',
+  styleUrl: './pagos.css'
 })
-export class ClientePagosComponent implements OnInit {
+export class Pagos implements OnInit {
   servicios: Servicio[] = [];
   servicioSeleccionado: Servicio | null = null;
 
@@ -35,7 +39,7 @@ export class ClientePagosComponent implements OnInit {
     });
   }
 
-  Pasarela(servicio: Servicio): void {
+  abrirPasarela(servicio: Servicio): void {
     this.servicioSeleccionado = servicio;
     this.mostrarModalPago = true;
     this.metodoSeleccionado = '';

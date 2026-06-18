@@ -23,6 +23,10 @@ export class Cliente implements OnInit {
     }
   }
 
+  pagos(){
+    this.router.navigate(['/pagos']);
+  }
+
   //Para cerrar sesión:
   cerrarSesionUsuario() {
     Swal.fire({
