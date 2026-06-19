@@ -72,18 +72,18 @@
                 <div class="mb-2">
                     <label class="block text-[10px] font-bold text-gray-500 uppercase">Número de Tarjeta</label>
                     <input type="text" [(ngModel)]="datosTarjeta.numero" placeholder="4557 •••• •••• 1234"
-                        class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none font-mono">
+                        class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none font-mono" required>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase">Expiración</label>
                         <input type="text" [(ngModel)]="datosTarjeta.expiracion" placeholder="MM/AA"
-                            class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none text-center">
+                            class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none text-center" required>
                     </div>
                     <div>
                         <label class="block text-[10px] font-bold text-gray-500 uppercase">CVC</label>
                         <input type="password" [(ngModel)]="datosTarjeta.cvc" placeholder="•••"
-                            class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none text-center">
+                            class="w-full bg-white border border-gray-200 rounded-lg p-2 text-xs focus:outline-none text-center" required>
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                 <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Sube la captura de tu
                     Voucher</label>
                 <input type="file" (change)="onFileSelected($event)" accept="image/*"
-                    class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer">
+                    class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer" required>
                 <p *ngIf="voucherBase64" class="text-[10px] text-green-600 font-bold mt-1">✓ Captura cargada
                     exitosamente</p>
             </div>

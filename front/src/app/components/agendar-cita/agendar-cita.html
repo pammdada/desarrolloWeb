@@ -41,7 +41,7 @@
                 <label class="block text-sm font-medium text-gray-700">Motivo de la consulta</label>
                 <textarea name="motivo" [(ngModel)]="cita.motivo" (input)="validarMotivo()" rows="3"
                     placeholder="Ej: Tiene tos o le toca vacuna..."
-                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2 border"></textarea>
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 p-2 border" required></textarea>
                 <small *ngIf="errores.motivo" class="text-red-500 text-xs">{{ errores.motivo }}</small>
             </div>
 

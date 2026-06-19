@@ -43,7 +43,7 @@ export class Servicios implements OnInit {
 
   registrarServicio(): void {
     if (!this.nuevoServicio.nombre || !this.nuevoServicio.precio) {
-      Swal.fire('Atención', 'Nombre y Precio son campos obligatorios', 'warning');
+      Swal.fire('Atención', 'Nombre y precio son campos obligatorios', 'warning');
       return;
     }
 
