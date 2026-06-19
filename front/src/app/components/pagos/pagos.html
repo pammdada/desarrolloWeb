@@ -20,7 +20,7 @@
                 <div class="flex items-center justify-between pt-4 border-t border-gray-50">
                     <span class="text-xl font-extrabold text-green-600">S/. {{ serv.precio | number:'1.2-2' }}</span>
                     <button (click)="abrirPasarela(serv)"
-                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-xs transition">
+                        class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold text-sm transition duration-200">
                         Elegir y Pagar
                     </button>
                 </div>
@@ -101,7 +101,7 @@
             </div>
 
             <button (click)="procesarPago()" [disabled]="!metodoSeleccionado"
-                class="w-full mt-2 bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-200 disabled:text-gray-400 font-bold text-sm py-3 rounded-xl transition duration-200">
+                class="w-full mt-2 bg-green-500 hover:bg-green-600 text-white disabled:bg-gray-200 disabled:text-gray-400 font-semibold text-sm py-3 rounded-lg transition duration-200">
                 Confirmar y Finalizar
             </button>
 
