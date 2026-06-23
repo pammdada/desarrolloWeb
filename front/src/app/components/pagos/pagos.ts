@@ -30,6 +30,12 @@ export class Pagos implements OnInit {
 
   ngOnInit(): void {
     this.cargarServicios();
+    const usuarioAc = localStorage.getItem('currentUser');
+
+    if (usuarioAc) {
+      const usuario = JSON.parse(usuarioAc);
+      const cliente = usuario.id;
+    }
   }
 
   cargarServicios(): void {
@@ -68,15 +74,31 @@ export class Pagos implements OnInit {
       return;
     }
 
+    
+
     // Datos paa enviar a Java
-    const objetoVenta = {
+    const objetoVenta: any = {
       total: this.servicioSeleccionado?.precio,
       metodoPago: this.metodoSeleccionado,
-      numeroCuenta: this.metodoSeleccionado === 'TRANSACCION' ? this.numeroCuentaClinica : null,
-      qrUrl: this.metodoSeleccionado === 'TRANSACCION' ? this.voucherBase64 : null,
-      clienteId: 1,
-      citaId: null 
+      clienteId: null,
+      citaId: null,
+      tarjeta: null,
+      voucher: null,
     };
+
+    if (this.metodoSeleccionado === 'TARJETA') {
+    objetoVenta.tarjeta = {
+      numeroTarjeta: this.datosTarjeta.numero,
+      expiracion: this.datosTarjeta.expiracion
+    };
+  }
+
+  
+  if (this.metodoSeleccionado === 'TRANSACCION') {
+    objetoVenta.voucher = {
+      imagenBase64: this.voucherBase64
+    };
+  }
 
     this.http.post('http://localhost:8080/api/ventas/procesar', objetoVenta, { withCredentials: true })
       .subscribe({

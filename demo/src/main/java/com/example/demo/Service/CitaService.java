@@ -56,7 +56,6 @@ public class CitaService {
             return RespuestaApi.error("La hora debe estar entre 09:00 y 22:00");
         }
 
-        // Valida que no exista una cita duplicada para la misma mascota en la misma fecha y hora
         if (citaRepository.existsByMascotaIdAndFechaAndHora(
                 solicitud.getMascotaId().intValue(), solicitud.getFecha(), solicitud.getHora())) {
             return RespuestaApi.error("Ya tienes una cita agendada para esa mascota en esa fecha y hora");

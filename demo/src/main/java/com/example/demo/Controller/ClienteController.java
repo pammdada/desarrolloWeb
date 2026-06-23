@@ -77,18 +77,10 @@ public class ClienteController {
         return ResponseEntity.ok(citaServicio.rechazarReagendacion(id));
     }
 
-    // ---------- Perfil del cliente ----------
-
-    /**
-     * Obtiene el perfil completo del cliente autenticado,
-     * incluyendo la cantidad de mascotas registradas.
-     */
     @GetMapping("/perfil")
     public ResponseEntity<RespuestaApi> obtenerPerfil(Principal principal) {
-        // Obtiene los datos base del perfil desde el servicio de usuario
         RespuestaApi respuesta = usuarioServicio.obtenerPerfilCompleto();
 
-        // Agrega el conteo de mascotas al mapa de datos si la respuesta fue exitosa
         if (respuesta.getExito() && respuesta.getDatos() instanceof java.util.Map) {
             @SuppressWarnings("unchecked")
             java.util.Map<String, Object> datos = (java.util.Map<String, Object>) respuesta.getDatos();
@@ -102,19 +94,12 @@ public class ClienteController {
         return ResponseEntity.ok(respuesta);
     }
 
-    /**
-     * Actualiza los datos editables del perfil del cliente autenticado.
-     */
     @PutMapping("/perfil")
     public ResponseEntity<RespuestaApi> actualizarPerfil(
             @Valid @RequestBody ActualizarPerfilSolicitud solicitud) {
         return ResponseEntity.ok(usuarioServicio.actualizarPerfil(solicitud));
     }
 
-    /**
-     * Cambia la contrasena del cliente autenticado.
-     * La contrasena actual se requiere como verificacion.
-     */
     @PutMapping("/perfil/cambiar-contrasena")
     public ResponseEntity<RespuestaApi> cambiarContrasena(
             @Valid @RequestBody CambiarContrasenaSolicitud solicitud) {
