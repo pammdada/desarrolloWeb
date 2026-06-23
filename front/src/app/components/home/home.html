@@ -1,24 +1,3 @@
-<!--Navbar-->
-<nav class="bg-white shadow-md px-6 py-4">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div routerLink="/home" class="text-2xl font-bold text-green-600 cursor-pointer">
-            VetPro
-        </div>
-        <div class="flex items-center gap-4">
-            <button routerLink="/login"
-                class="px-4 py-2 rounded-lg border border-green-500 text-green-600 hover:bg-green-50 transition">
-                Iniciar Sesión
-            </button>
-            <button routerLink="/registro"
-                class="px-4 py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 shadow-md transition">
-                Registrarse
-            </button>
-        </div>
-    </div>
-</nav>
-
-
-
 <img class="w-screen h-142 object-cover" src="assets/imagenes/fondo1.jpg" alt="fondo_inicio">
 
 <div class="mt-8 mb-8 p-8">
@@ -55,7 +34,7 @@
 
 
         <!--Sección 'Servicios'-->
-        <div class="col-span-6">
+        <div id="servicios" class="col-span-6">
             <div class="grid sm:grid-cols-12 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-y-5">
                 <div class="col-span-12 bg-green-600 beneficios p-4 rounded-lg shadow-md">
                     <h1 class="text-2xl font-bold">
@@ -98,8 +77,8 @@
 
 
 
-    <!--Seción "Sobre Nosotros"-->
-    <div class="grid md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 mt-40 p-10 bg-gray-100 gap-y-10 gap-x-5">
+    <!--Sección "Sobre Nosotros"-->
+    <div id="nosotros" class="grid md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 mt-40 p-10 bg-gray-100 gap-y-10 gap-x-5">
         <div class="col-span-6 flex justify-center mt-9">
             <div class="text-lg text-center">
                 <h1 class="text-3xl font-bold text-green-500 text-center">
@@ -118,6 +97,26 @@
         </div>
         <div class="col-span-6 flex justify-center">
             <img src="assets/imagenes/sobre-nosotros.jpg" width="640px" class="rounded-lg shadow-md" alt="sobre-nosotros">
+        </div>
+    </div>
+
+    <!--Sección "Personal"-->
+    <div id="personal" class="py-20 bg-white mt-40">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-4">Nuestro Equipo</h2>
+            <p class="text-gray-500 text-center mb-12 max-w-2xl mx-auto">Conoce a los profesionales que cuidan de tu mascota</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                @for (vet of veterinarios(); track vet.id) {
+                    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 text-center hover:shadow-xl transition-shadow duration-300">
+                        <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-2xl font-bold mb-4">
+                            {{ vet.nombre?.charAt(0) }}{{ vet.apellidos?.charAt(0) }}
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800">{{ vet.nombre }} {{ vet.apellidos }}</h3>
+                        <p class="text-sm text-green-600 font-medium mb-2">{{ vet.especialidad || 'General' }}</p>
+                        <p class="text-gray-500 text-sm">{{ vet.correo }}</p>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

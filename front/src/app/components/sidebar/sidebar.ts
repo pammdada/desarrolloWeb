@@ -53,6 +53,7 @@ export class Sidebar implements OnInit {
           {
             label: 'Operaciones',
             items: [
+              { label: 'Home', route: '/', icon: 'home' },
               { label: 'Dashboard', route: '/admin', icon: 'chart' },
               { label: 'Clientes', route: '/admin/clientes', icon: 'group' },
               { label: 'Servicios', route: '/admin/servicios', icon: 'tools' },
@@ -70,6 +71,7 @@ export class Sidebar implements OnInit {
           {
             label: 'Operaciones',
             items: [
+              { label: 'Home', route: '/', icon: 'home' },
               { label: 'Citas asignadas', route: '/veterinario', icon: 'calendar' },
               { label: 'Citas en cola', route: '/veterinario', icon: 'inbox' },
               { label: 'Historial mascotas', route: '/veterinario/historial', icon: 'history' },
@@ -87,7 +89,7 @@ export class Sidebar implements OnInit {
           {
             label: 'Operaciones',
             items: [
-              { label: 'Landing Page', route: '/', icon: 'home' },
+              { label: 'Home', route: '/', icon: 'home' },
               {
                 label: 'Mascotas',
                 route: '/cliente/mascotas',

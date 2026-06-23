@@ -1,0 +1,72 @@
+<nav class="sticky top-0 z-50 h-[72px] bg-white/80 backdrop-blur-xl border-b border-gray-100/50 shadow-sm">
+  <div class="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+    <div class="text-2xl font-bold text-green-600 tracking-tight">VetPro</div>
+    <div class="hidden md:flex items-center gap-1">
+      <a [routerLink]="['/']" [fragment]="'nosotros'"
+         class="px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+         [class.text-green-600]="activeSection() === 'nosotros'"
+         [class.font-bold]="activeSection() === 'nosotros'"
+         [class.bg-green-50]="activeSection() === 'nosotros'">
+        Nosotros
+      </a>
+      <a [routerLink]="['/']" [fragment]="'servicios'"
+         class="px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+         [class.text-green-600]="activeSection() === 'servicios'"
+         [class.font-bold]="activeSection() === 'servicios'"
+         [class.bg-green-50]="activeSection() === 'servicios'">
+        Servicios
+      </a>
+      <a [routerLink]="['/']" [fragment]="'personal'"
+         class="px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+         [class.text-green-600]="activeSection() === 'personal'"
+         [class.font-bold]="activeSection() === 'personal'"
+         [class.bg-green-50]="activeSection() === 'personal'">
+        Personal
+      </a>
+    </div>
+    @if (!user()) {
+      <div class="hidden md:flex items-center gap-3">
+        <a routerLink="/login" class="px-4 py-2 text-sm font-medium text-green-600 border border-green-500 rounded-lg hover:bg-green-50 transition-all duration-200">
+          Iniciar Sesión
+        </a>
+        <a routerLink="/registro" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 shadow-sm transition-all duration-200">
+          Únete
+        </a>
+      </div>
+    } @else {
+      <div class="hidden md:flex items-center gap-3">
+        <a routerLink="/perfil" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 text-white flex items-center justify-center text-sm font-bold">
+            {{ getUserInitials() }}
+          </div>
+          <span class="text-sm font-medium text-gray-700">{{ user()?.nombre }}</span>
+        </a>
+        <a [routerLink]="getDashboardRoute()" class="px-4 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg hover:bg-green-600 shadow-sm transition-all duration-200">
+          Dashboard
+        </a>
+      </div>
+    }
+    <button class="md:hidden p-2 rounded-lg hover:bg-gray-100" (click)="toggleMobileMenu()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+  </div>
+  @if (mobileMenuOpen()) {
+    <div class="md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-100 shadow-md">
+      <div class="px-6 py-4 space-y-2">
+        <a [routerLink]="['/']" [fragment]="'nosotros'" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100" (click)="mobileMenuOpen.set(false)">Nosotros</a>
+        <a [routerLink]="['/']" [fragment]="'servicios'" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100" (click)="mobileMenuOpen.set(false)">Servicios</a>
+        <a [routerLink]="['/']" [fragment]="'personal'" class="block px-3 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100" (click)="mobileMenuOpen.set(false)">Personal</a>
+        <hr class="my-2 border-gray-100">
+        @if (!user()) {
+          <a routerLink="/login" class="block px-3 py-2 text-sm font-medium text-green-600 rounded-lg hover:bg-green-50" (click)="mobileMenuOpen.set(false)">Iniciar Sesión</a>
+          <a routerLink="/registro" class="block px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg text-center hover:bg-green-600" (click)="mobileMenuOpen.set(false)">Únete</a>
+        } @else {
+          <a routerLink="/perfil" class="block px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100" (click)="mobileMenuOpen.set(false)">Perfil</a>
+          <a [routerLink]="getDashboardRoute()" class="block px-3 py-2 text-sm font-semibold text-white bg-green-500 rounded-lg text-center hover:bg-green-600" (click)="mobileMenuOpen.set(false)">Dashboard</a>
+        }
+      </div>
+    </div>
+  }
+</nav>

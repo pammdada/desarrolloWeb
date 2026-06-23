@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+nav {
+  transition: all 0.3s ease-in-out;
+}

@@ -2,13 +2,14 @@ import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { Footer } from "./components/footer/footer";
 import { Sidebar } from "./components/sidebar/sidebar";
+import { Navbar } from "./components/navbar/navbar";
 import { autenticacion } from './services/Autenticacion/autenticacion';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Footer, Sidebar],
+  imports: [RouterOutlet, Footer, Sidebar, Navbar],
   standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.css',
