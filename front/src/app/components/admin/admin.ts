@@ -43,17 +43,7 @@ export class Admin implements OnInit {
     private router: Router
   ) {}
 
-  // verifica rol de admin al iniciar, redirige si no corresponde
   ngOnInit(): void {
-    const user = this.authService.getCurrentUser();
-    if (!user) { this.router.navigate(['/login']); return; }
-    const rol = user.rol.toUpperCase();
-    if (rol !== 'ADMIN') {
-      if (rol === 'VETERINARIO') this.router.navigate(['/vet']);
-      else if (rol === 'CLIENTE') this.router.navigate(['/client']);
-      else this.router.navigate(['/login']);
-      return;
-    }
     this.cargarVeterinarios();
   }
 
@@ -92,7 +82,7 @@ export class Admin implements OnInit {
   }
 
   servicios(){
-    this.router.navigate(['/servicios']);
+    this.router.navigate(['/admin/servicios']);
   }
 
   // envia los datos del formulario al backend para crear un veterinario

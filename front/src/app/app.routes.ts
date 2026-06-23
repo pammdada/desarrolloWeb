@@ -11,19 +11,57 @@ import { VerificarToken } from './components/verificar-token/verificar-token';
 import { Perfil } from './components/perfil/perfil';
 import { Servicios } from './components/servicios/servicios';
 import { Pagos } from './components/pagos/pagos';
+import { authGuard } from './guards/auth.guard';
+import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login', component: Login },
-  { path: 'registro', component: Registro},
+  { path: 'registro', component: Registro },
   { path: 'verificar-token', component: VerificarToken },
-  { path: 'admin', component: Admin },
-  { path: 'cliente', component: Cliente },
-  { path: 'veterinario', component: Veterinario },
-  { path: 'agendar-cita', component: AgendarCita },
-  { path: 'registrar-mascota', component: RegistrarMascota },
-  { path: 'perfil', component: Perfil },
-  { path: 'servicios', component: Servicios },
-  { path: 'pagos', component: Pagos },
+  {
+    path: 'admin',
+    component: Admin,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  {
+    path: 'admin/servicios',
+    component: Servicios,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  {
+    path: 'cliente',
+    component: Cliente,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['CLIENTE'] }
+  },
+  {
+    path: 'veterinario',
+    component: Veterinario,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['VETERINARIO'] }
+  },
+  {
+    path: 'agendar-cita',
+    component: AgendarCita,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'registrar-mascota',
+    component: RegistrarMascota,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'perfil',
+    component: Perfil,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'pagos',
+    component: Pagos,
+    canActivate: [authGuard]
+  },
   { path: '**', redirectTo: '' }
 ];
