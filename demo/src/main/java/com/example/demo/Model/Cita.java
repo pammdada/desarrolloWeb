@@ -6,20 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.LocalDateTime;
 
-/**
- * ENTIDAD CITA
- * 
- * USO FRONTEND:
- * - Cliente solicita cita
- * - Veterinario acepta/rechaza/reagenda
- * - Veterinario marca como atendida
- */
 @Entity
 @Table(name = "citas")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cita {
     
     @Id

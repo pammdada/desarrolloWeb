@@ -2,11 +2,14 @@ package com.example.demo.Model;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -27,9 +30,6 @@ public class Venta {
     @Column(name = "metodo_pago", nullable = false)
     private String metodoPago;
 
-    @Column(name = "numero_cuenta")
-    private String numeroCuenta;
-
     @Column(name = "estado_pago", nullable = false)
     private String estadoPago;
 
@@ -38,4 +38,12 @@ public class Venta {
 
     @Column(name = "cita_id")
     private Integer citaId;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "tarjeta_id")
+    private Tarjeta tarjeta;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 }
