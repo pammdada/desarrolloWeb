@@ -11,6 +11,10 @@ import { VerificarToken } from './components/verificar-token/verificar-token';
 import { Perfil } from './components/perfil/perfil';
 import { Servicios } from './components/servicios/servicios';
 import { Pagos } from './components/pagos/pagos';
+import { ListadoMascotas } from './components/listado-mascotas/listado-mascotas';
+import { ComprasPrevias } from './components/compras-previas/compras-previas';
+import { ListaClientes } from './components/lista-clientes/lista-clientes';
+import { HistorialMascotas } from './components/historial-mascotas/historial-mascotas';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 
@@ -32,14 +36,38 @@ export const routes: Routes = [
     data: { roles: ['ADMIN'] }
   },
   {
+    path: 'admin/clientes',
+    component: ListaClientes,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  {
     path: 'cliente',
     component: Cliente,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['CLIENTE'] }
   },
   {
+    path: 'cliente/mascotas',
+    component: ListadoMascotas,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['CLIENTE'] }
+  },
+  {
+    path: 'cliente/compras',
+    component: ComprasPrevias,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['CLIENTE'] }
+  },
+  {
     path: 'veterinario',
     component: Veterinario,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['VETERINARIO'] }
+  },
+  {
+    path: 'veterinario/historial',
+    component: HistorialMascotas,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['VETERINARIO'] }
   },

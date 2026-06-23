@@ -1,5 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +12,10 @@ export class autenticacion {
   private CLIENTE_API_URL = 'http://localhost:8080/api/cliente';
   private httpOptions = { withCredentials: true };
 
-  constructor(private http: HttpClient) { }
+  private currentUserSubject = new BehaviorSubject<any>(this.getCurrentUser());
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(credentials: any) {
     return this.http.post(`${this.API_URL}/login`, credentials, this.httpOptions);
@@ -23,25 +29,21 @@ export class autenticacion {
     return this.http.post(`${this.API_URL}/verificar-token`, data, this.httpOptions);
   }
 
-  // ---------- Perfil ----------
-
-  // Obtiene los datos completos del perfil del cliente autenticado
   obtenerPerfil() {
     return this.http.get(`${this.CLIENTE_API_URL}/perfil`, this.httpOptions);
   }
 
-  // Actualiza los datos editables del perfil
   actualizarPerfil(datos: any) {
     return this.http.put(`${this.CLIENTE_API_URL}/perfil`, datos, this.httpOptions);
   }
 
-  // Cambia la contrasena verificando la contrasena actual
   cambiarContrasena(datos: any) {
     return this.http.put(`${this.CLIENTE_API_URL}/perfil/cambiar-contrasena`, datos, this.httpOptions);
   }
 
   setCurrentUser(user: any) {
     localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
   getCurrentUser() {
@@ -49,7 +51,26 @@ export class autenticacion {
     return user ? JSON.parse(user) : null;
   }
 
+  logoutFront() {
+    Swal.fire({
+      title: 'Cerrar sesión',
+      text: '¿Estás seguro de cerrar sesión?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: 'rgb(39, 204, 75)',
+      confirmButtonText: 'Cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.logout();
+        this.router.navigate(['/']);
+      }
+    });
+  }
+
   logout() {
     localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
   }
 }
