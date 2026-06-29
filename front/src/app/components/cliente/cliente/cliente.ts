@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { autenticacion } from '../../services/Autenticacion/autenticacion';
+import { autenticacion } from '../../../services/Autenticacion/autenticacion';
 import {RouterModule, Router} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
@@ -40,9 +40,7 @@ export class Cliente implements OnInit {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        //Esto limpia el LocalStorage y redirige a la pantalla principal.
-        localStorage.clear();
-        this.router.navigate(['/home']);
+        this.autenticacion.logout();
       };
     });
   }

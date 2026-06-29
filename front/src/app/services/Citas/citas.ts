@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -52,18 +52,22 @@ export class Citas {
   }
 
   getMyAppointments(estado: string): Observable<any> {
-    return this.http.get(`http://localhost:8080/api/veterinario/citas/historial?estado=${estado}`, { withCredentials: true });
+    const params = new HttpParams().set('estado', estado);
+    return this.http.get(`${this.apiVeterinarioUrl}/citas/aceptadas`, { params, ...this.httpOptions });
   }
   rescheduleAppointment(id: number, datos: { nuevaFecha: string, nuevaHora: string }): Observable<any> {
-    return this.http.put(`http://localhost:8080/api/veterinario/citas/${id}/reagendar`, datos, { withCredentials: true });
+    return this.http.patch(`${this.apiVeterinarioUrl}/citas/${id}/reagendar`, datos, this.httpOptions);
   }
 
   addReport(id: number, reporte: string): Observable<any> {
-    return this.http.post(`http://localhost:8080/api/veterinario/citas/${id}/reporte`, { reporte }, { withCredentials: true });
+    return this.http.patch(`${this.apiVeterinarioUrl}/citas/${id}/reporte`, { reporte }, this.httpOptions);
   }
 
   markAsAttended(id: number): Observable<any> {
-    return this.http.put(`http://localhost:8080/api/veterinario/citas/${id}/atendida`, {}, { withCredentials: true });
+    return this.http.patch(`${this.apiVeterinarioUrl}/citas/${id}/atender`, {}, this.httpOptions);
   }
 
+  finalizarAtencion(id: number, datos: { reporte: string, problema: string }): Observable<any> {
+    return this.http.put(`http://localhost:8080/api/citas/atender/${id}`, datos, this.httpOptions);
+  }
 }

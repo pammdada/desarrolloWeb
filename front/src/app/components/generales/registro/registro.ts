@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { autenticacion } from '../../services/Autenticacion/autenticacion';
+import { autenticacion } from '../../../services/Autenticacion/autenticacion';
 import { Router } from '@angular/router';
-import { verificarRequisitosContrasena, validarContrasena } from '../../utils/validacion-contrasena';
+import { verificarRequisitosContrasena, validarContrasena } from '../../../utils/validacion-contrasena';
 
 @Component({
   selector: 'app-registro',

@@ -24,4 +24,12 @@ export class AdminService {
   fireVeterinario(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/veterinarios/${id}`, { withCredentials: true });
   }
+
+  getVeterinarioById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/veterinarios/${id}`, { withCredentials: true });
+  }
+
+  updateVeterinario(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/veterinarios/${id}`, data, { withCredentials: true });
+  }
 }

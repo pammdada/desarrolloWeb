@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -33,6 +33,11 @@ export class autenticacion {
     return this.http.get(`${this.CLIENTE_API_URL}/perfil`, this.httpOptions);
   }
 
+  validateCurrentSession() {
+    const headers = new HttpHeaders({ 'X-Skip-Auth-Redirect': 'true' });
+    return this.http.get(`${this.CLIENTE_API_URL}/perfil`, { ...this.httpOptions, headers });
+  }
+
   actualizarPerfil(datos: any) {
     return this.http.put(`${this.CLIENTE_API_URL}/perfil`, datos, this.httpOptions);
   }
@@ -64,13 +69,36 @@ export class autenticacion {
     }).then((result) => {
       if (result.isConfirmed) {
         this.logout();
-        this.router.navigate(['/']);
       }
     });
   }
 
   logout() {
+    this.http.post(`${this.API_URL}/logout`, {}, this.httpOptions).subscribe({
+      next: () => {
+        this.limpiarSesionYRedirigir();
+      },
+      error: (err) => {
+        console.error('Error al cerrar sesión en backend:', err);
+        Swal.fire({
+          icon: 'warning',
+          title: 'Sesión no cerrada correctamente',
+          text: 'No se pudo contactar al servidor, pero se limpiará tu sesión local.',
+          confirmButtonColor: '#d33'
+        }).then(() => {
+          this.limpiarSesionYRedirigir();
+        });
+      }
+    });
+  }
+
+  clearSession(): void {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+  }
+
+  private limpiarSesionYRedirigir() {
+    this.clearSession();
+    this.router.navigate(['/']);
   }
 }

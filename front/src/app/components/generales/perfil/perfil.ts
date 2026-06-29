@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { autenticacion } from '../../services/Autenticacion/autenticacion';
-import { PerfilUsuario, ActualizarPerfilData, CambiarContrasenaData } from '../../models/usuario.model';
-import { verificarRequisitosContrasena, validarContrasena } from '../../utils/validacion-contrasena';
+import { autenticacion } from '../../../services/Autenticacion/autenticacion';
+import { PerfilUsuario, ActualizarPerfilData, CambiarContrasenaData } from '../../../models/usuario.model';
+import { verificarRequisitosContrasena, validarContrasena } from '../../../utils/validacion-contrasena';
 import Swal from 'sweetalert2';
 
 @Component({
