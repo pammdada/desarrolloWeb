@@ -1,9 +1,10 @@
 import { Component, signal, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
-import { Footer } from "./components/footer/footer";
-import { Sidebar } from "./components/sidebar/sidebar";
-import { Navbar } from "./components/navbar/navbar";
+import { Footer } from "./components/generales/footer/footer";
+import { Sidebar } from "./components/generales/sidebar/sidebar";
+import { Navbar } from "./components/generales/navbar/navbar";
 import { autenticacion } from './services/Autenticacion/autenticacion';
+import { InactivityService } from './services/inactivity/inactivity.service';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
@@ -21,13 +22,19 @@ export class App implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private authService: autenticacion
+    private authService: autenticacion,
+    private inactivityService: InactivityService
   ) {}
 
   ngOnInit(): void {
     this.subs.push(
-      this.authService.currentUser$.subscribe(() => {
+      this.authService.currentUser$.subscribe((user) => {
         this.updateSidebar();
+        if (user) {
+          this.inactivityService.startMonitoring();
+        } else {
+          this.inactivityService.stopMonitoring();
+        }
       })
     );
     this.subs.push(

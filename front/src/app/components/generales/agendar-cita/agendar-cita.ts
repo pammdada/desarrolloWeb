@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Mascota } from '../../services/Mascotas/mascota';
+import { Mascota } from '../../../services/Mascotas/mascota';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
-import { Citas } from '../../services/Citas/citas';
+import { Citas } from '../../../services/Citas/citas';
 import Swal from 'sweetalert2';
 
 @Component({

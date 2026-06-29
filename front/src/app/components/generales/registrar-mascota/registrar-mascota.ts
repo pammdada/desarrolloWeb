@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { Mascota } from '../../services/Mascotas/mascota';
+import { Mascota } from '../../../services/Mascotas/mascota';
 
 @Component({
   selector: 'app-registrar-mascota',

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Citas } from '../../services/Citas/citas';
+import { Citas } from '../../../services/Citas/citas';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { autenticacion } from '../../services/Autenticacion/autenticacion';
+import { autenticacion } from '../../../services/Autenticacion/autenticacion';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-veterinario',
@@ -17,7 +18,6 @@ export class Veterinario {
   citasPendientes: any[] = [];
   myAppointments: any[] = [];
   activeTab: string = 'pending';
-  filterStatus: string = 'ACEPTADA';
 
   showRescheduleModal: boolean = false;
   selectedAppointment: any = null;
@@ -25,6 +25,7 @@ export class Veterinario {
 
   showReportModal: boolean = false;
   reportText: string = '';
+  recetaText: string = '';
 
   constructor(
     private citas: Citas,
@@ -60,14 +61,18 @@ export class Veterinario {
   }
 
   loadMyAppointments(): void {
-    // Reutiliza tu servicio de citas pasando el filtro 'ACEPTADA' o 'ATENDIDA'
-    this.citas.getMyAppointments(this.filterStatus).subscribe({
-      next: (response) => {
-        if (response && response.datos) {
-          this.myAppointments = response.datos;
-        } else {
-          this.myAppointments = [];
-        }
+    forkJoin({
+      aceptadas: this.citas.getMyAppointments('ACEPTADA'),
+      atendidas: this.citas.getMyAppointments('ATENDIDA')
+    }).subscribe({
+      next: (res) => {
+        const aceptadas = res.aceptadas?.datos || [];
+        const atendidas = res.atendidas?.datos || [];
+        this.myAppointments = [...aceptadas, ...atendidas];
+      },
+      error: (err) => {
+        console.error('Error al cargar citas asignadas', err);
+        this.myAppointments = [];
       }
     });
   }
@@ -133,17 +138,39 @@ export class Veterinario {
     });
   }
 
-  saveReport(): void {
-    this.citas.addReport(this.selectedAppointment.id, this.reportText)
-      .subscribe(() => {
+  finalizarCita(): void {
+    const id = this.selectedAppointment.id;
+    this.citas.finalizarAtencion(id, {
+      reporte: this.reportText,
+      problema: this.recetaText
+    }).subscribe({
+      next: () => {
         this.showReportModal = false;
+        this.reportText = '';
+        this.recetaText = '';
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Atención finalizada correctamente",
+          showConfirmButton: false,
+          timer: 1500
+        });
         this.loadMyAppointments();
-      });
+      },
+      error: (err) => {
+        console.error('Error al finalizar atención', err);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "No se pudo finalizar la atención"
+        });
+      }
+    });
   }
   openReschedule(app: any): void {
     this.selectedAppointment = app;
     this.rescheduleData.nuevaFecha = app.fecha || '';
-    this.rescheduleData.nuevaHora = app.hora || '';
+    this.rescheduleData.nuevaHora = app.hora?.substring(0, 5) || '';
     this.showRescheduleModal = true;
   }
 
@@ -162,24 +189,31 @@ export class Veterinario {
           Swal.fire('Reagendado', 'La cita se movió con éxito', 'success');
           this.showRescheduleModal = false;
           this.obtenerCitasPendientes();
+          this.loadMyAppointments();
         }
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error('Error al reagendar', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo reagendar la cita'
+        });
+      }
     });
   }
 
-  markAttended(id: number): void {
-    Swal.fire({
-      title: "¿Finalizar atención?",
-      text: "La cita cambiará a estado ATENDIDA",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sí, finalizar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.citas.markAsAttended(id).subscribe(() => this.loadMyAppointments());
-      }
-    });
+  openReportModal(app: any): void {
+    this.selectedAppointment = app;
+    this.reportText = '';
+    this.recetaText = '';
+    this.showReportModal = true;
+  }
+
+  cerrarReportModal(): void {
+    this.showReportModal = false;
+    this.reportText = '';
+    this.recetaText = '';
   }
 
   cerrarSesion() {
@@ -194,7 +228,6 @@ export class Veterinario {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        //Aquí cierra sesión y te dirige a la pantalla de inicio.
         this.authService.logout();
         this.router.navigate(['/home']);
       };

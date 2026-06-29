@@ -1,0 +1,144 @@
+<div class="min-h-screen bg-gray-50 p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex gap-x-5">
+                <h1 class="text-3xl font-bold text-gray-800 border-l-4 border-green-600 pl-4">
+                    Panel Veterinario
+                </h1>
+            </div>
+            <span class="bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">
+                Veterinario Activo
+            </span>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-1 mb-6">
+            <button (click)="activeTab = 'pending'"
+                class="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300"
+                [class]="activeTab === 'pending' ? 'bg-green-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'">
+                Pendientes
+            </button>
+            <button (click)="activeTab = 'my'"
+                class="px-6 py-2.5 text-sm font-semibold rounded-lg transition-all duration-300"
+                [class]="activeTab === 'my' ? 'bg-green-600 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'">
+                Mis Citas
+            </button>
+        </div>
+
+        <!-- Tab Pendientes -->
+        <div *ngIf="activeTab === 'pending'" class="bg-white shadow-xl rounded-lg overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-green-100 uppercase text-sm text-gray-600">
+                    <tr>
+                        <th class="p-4">Mascota</th>
+                        <th class="p-4">Problema</th>
+                        <th class="p-4">Fecha y Hora</th>
+                        <th class="p-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr *ngFor="let cita of citasPendientes" class="hover:bg-blue-50 transition">
+                        <td class="p-4 font-medium text-gray-900">{{ cita.mascota?.nombre }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.problema }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.fecha | date:'dd/MM/yyyy' }} - {{ cita.hora }}</td>
+                        <td class="p-4 flex justify-center gap-3">
+                            <button (click)="gestionarCita(cita, 'ACEPTADA')"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                                Aceptar
+                            </button>
+                            <button (click)="openReschedule(cita)"
+                                class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                                Reagendar
+                            </button>
+                            <button (click)="gestionarCita(cita, 'RECHAZADA')"
+                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                                Rechazar
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="citasPendientes.length === 0">
+                        <td colspan="4" class="p-10 text-center text-gray-400 italic">
+                            No tienes solicitudes de citas pendientes por ahora.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab Mis Citas -->
+        <div *ngIf="activeTab === 'my'" class="bg-white shadow-xl rounded-lg overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-green-100 uppercase text-sm text-gray-600">
+                    <tr>
+                        <th class="p-4">Mascota</th>
+                        <th class="p-4">Dueño</th>
+                        <th class="p-4">Fecha y Hora</th>
+                        <th class="p-4">Estado</th>
+                        <th class="p-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr *ngFor="let cita of myAppointments" class="hover:bg-blue-50 transition">
+                        <td class="p-4 font-medium text-gray-900">{{ cita.mascota?.nombre || '-' }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.cliente?.nombre + ' ' + cita.cliente?.apellidos || '-' }}</td>
+                        <td class="p-4 text-gray-600">{{ cita.fecha | date:'dd/MM/yyyy' }} - {{ cita.hora }}</td>
+                        <td class="p-4">
+                            <span *ngIf="cita.estado === 'ACEPTADA'"
+                                class="inline-flex items-center gap-1 text-xs font-semibold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Aceptada
+                            </span>
+                            <span *ngIf="cita.estado === 'ATENDIDA'"
+                                class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Atendida
+                            </span>
+                            <span *ngIf="cita.estado === 'REAGENDADA'"
+                                class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Reagendada
+                            </span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <button *ngIf="cita.estado === 'ACEPTADA'" (click)="openReportModal(cita)"
+                                class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold transition shadow-md">
+                                Finalizar Atención
+                            </button>
+                            <span *ngIf="cita.estado === 'ATENDIDA'" class="text-xs text-gray-400 italic">Completada</span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="myAppointments.length === 0">
+                        <td colspan="5" class="p-10 text-center text-gray-400 italic">
+                            No tienes citas asignadas.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div *ngIf="showRescheduleModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Reagendar Cita</h3>
+        <label>Nueva Fecha</label>
+        <input type="date" [(ngModel)]="rescheduleData.nuevaFecha">
+        <label>Nueva Hora</label>
+        <input type="time" [(ngModel)]="rescheduleData.nuevaHora" min="08:00" max="23:00">
+        <div class="modal-actions">
+            <button class="btn btn-secondary" (click)="showRescheduleModal = false">Cancelar</button>
+            <button class="btn btn-primary" (click)="confirmReschedule()">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Finalizar Atencion -->
+<div *ngIf="showReportModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Finalizar Atención</h3>
+        <label>Diagnóstico</label>
+        <textarea [(ngModel)]="reportText" rows="4" placeholder="Diagnóstico, tratamiento, observaciones..."></textarea>
+        <label>Receta</label>
+        <textarea [(ngModel)]="recetaText" rows="3" placeholder="Receta médica (opcional)"></textarea>
+        <div class="modal-actions">
+            <button class="btn btn-secondary" (click)="cerrarReportModal()">Cancelar</button>
+            <button class="btn btn-primary" (click)="finalizarCita()">Finalizar y Guardar</button>
+        </div>
+    </div>
+</div>

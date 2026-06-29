@@ -12,8 +12,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error) => {
       if (error.status === 401) {
-        authService.logout();
-        router.navigate(['/login']);
+        const skipRedirect = req.headers.get('X-Skip-Auth-Redirect');
+        if (skipRedirect === 'true') {
+          authService.clearSession();
+        } else {
+          authService.logout();
+          router.navigate(['/login']);
+        }
       } else if (error.status === 403) {
         router.navigate(['/']);
       }

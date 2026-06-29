@@ -1,7 +1,7 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { autenticacion } from '../../services/Autenticacion/autenticacion';
+import { autenticacion } from '../../../services/Autenticacion/autenticacion';
 
 interface NavItem {
   label: string;

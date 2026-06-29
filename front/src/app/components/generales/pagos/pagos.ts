@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ServicioService, Servicio } from '../../services/Servicios/servicios'; 
-import { HttpClient } from '@angular/common/http';
+import { ServicioService, Servicio } from '../../../services/Servicios/servicios'; 
+import { VentasService } from '../../../services/Ventas/ventas';
 import Swal from 'sweetalert2';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -25,7 +25,7 @@ export class Pagos implements OnInit {
 
   constructor(
     private servicioService: ServicioService,
-    private http: HttpClient
+    private ventasService: VentasService
   ) {}
 
   ngOnInit(): void {
@@ -100,8 +100,7 @@ export class Pagos implements OnInit {
     };
   }
 
-    this.http.post('http://localhost:8080/api/ventas/procesar', objetoVenta, { withCredentials: true })
-      .subscribe({
+    this.ventasService.procesarPago(objetoVenta).subscribe({
         next: (res: any) => {
           if (res.exito) {
             this.cerrarPasarela();

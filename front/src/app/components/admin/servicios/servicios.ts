@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ServicioService, Servicio } from '../../services/Servicios/servicios'; 
+import { ServicioService, Servicio } from '../../../services/Servicios/servicios'; 
 import Swal from 'sweetalert2';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
