@@ -1,0 +1,83 @@
+<div class="p-6 bg-gray-50 min-h-screen">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">Mi Historial de Consultas Médicas
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let item of listadoCitas"
+                class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-extrabold text-gray-900 text-base">{{ item.mascota?.nombre || 'Paciente' }}
+                        </h3>
+                        <span class="px-2.5 py-0.5 text-xs font-bold rounded-full"
+                            [class.bg-purple-100]="item.estado === 'REAGENDADA'"
+                            [class.text-purple-700]="item.estado === 'REAGENDADA'"
+                            [class.bg-green-100]="item.estado === 'ATENDIDA'"
+                            [class.text-green-700]="item.estado === 'ATENDIDA'"
+                            [class.bg-blue-100]="item.estado === 'ACEPTADA'"
+                            [class.text-blue-700]="item.estado === 'ACEPTADA'"
+                            [class.bg-red-100]="item.estado === 'RECHAZADA'"
+                            [class.text-red-700]="item.estado === 'RECHAZADA'">
+                            {{ item.estado }}
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-500"><b>Fecha programada:</b> {{ item.fecha }} — {{ item.hora }}</p>
+                    <p class="text-xs text-gray-600 mt-2 line-clamp-2"><b>Síntomas reportados:</b> {{ item.problema }}
+                    </p>
+                </div>
+
+                <div *ngIf="item.estado === 'REAGENDADA'"
+                    class="mt-4 p-3 bg-purple-50 rounded-xl border border-purple-100 text-[11px] text-purple-900 font-semibold animate-pulse">
+                    El doctor solicita mover la cita al: <span class="underline">{{ item.nuevaFecha }}</span> a las
+                    <span class="underline">{{ item.nuevaHora }}</span>.
+                    <div class="flex gap-2 justify-end mt-2">
+                        <button (click)="responderSolicitud(item.id, false)"
+                            class="bg-white text-red-600 px-2 py-1 rounded border border-red-200 hover:bg-red-50 transition font-bold">Rechazar</button>
+                        <button (click)="responderSolicitud(item.id, true)"
+                            class="bg-purple-600 text-white px-2 py-1 rounded hover:bg-purple-700 transition font-bold">Aceptar
+                            Nueva Fecha</button>
+                    </div>
+                </div>
+
+                <button (click)="verDetalles(item)"
+                    class="mt-4 w-full py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition">
+                    🔍 Ver Reporte Clínico Completo
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="citaSeleccionada"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                    <h2 class="font-bold text-gray-800 text-base"> Historial Clínico de la Atención</h2>
+                    <button (click)="citaSeleccionada = null"
+                        class="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+                </div>
+
+                <div class="space-y-3 text-xs text-gray-700">
+                    <p><b>Mascota:</b> {{ citaSeleccionada.mascota?.nombre }} ({{ citaSeleccionada.mascota?.tipo }})</p>
+                    <p><b>Veterinario:</b> Dr(a). {{ citaSeleccionada.veterinario?.nombre || 'Asignando Especialista...'
+                        }}</p>
+                    <hr class="border-gray-100">
+
+                    <div>
+                        <h4 class="font-bold uppercase text-[10px] text-gray-400 mb-1">Diagnóstico e Historial</h4>
+                        <p class="p-3 bg-gray-50 rounded-xl border border-gray-200 font-medium whitespace-pre-line">{{
+                            citaSeleccionada.reporte || 'El diagnóstico no ha sido redactado por el médico todavía.' }}
+                        </p>
+                    </div>
+
+                    <div *ngIf="citaSeleccionada.estado === 'ATENDIDA'" class="pt-2">
+                        <button (click)="descargarRecetaPDF(citaSeleccionada)"
+                            class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-md">
+                            Descargar Receta Médica Oficial (PDF)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

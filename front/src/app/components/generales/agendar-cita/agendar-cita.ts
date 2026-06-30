@@ -72,7 +72,7 @@ export class AgendarCita implements OnInit {
     const seleccionada = new Date(dateTimeValue);
 
     if (seleccionada <= ahora) {
-      this.errores.fechaHora = 'La fecha y hora debe ser futura (min. 1 hora de antelacion)';
+      this.errores.fechaHora = 'La fecha y hora debe ser con un dia de antelación';
       return false;
     }
 
