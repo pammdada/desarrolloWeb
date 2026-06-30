@@ -1,5 +1,6 @@
 package com.example.demo.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Usuario {
     @Column(name = "correo", nullable = false, unique = true, length = 150)
     private String correo;
 
+    @JsonIgnore
     @Column(nullable = false, length = 255)
     private String contrasena;
 
@@ -44,6 +46,7 @@ public class Usuario {
     @Column(length = 20)
     private String estadoVet;
 
+    @JsonIgnore
     @Column(length = 255)
     private String recoveryToken;
 

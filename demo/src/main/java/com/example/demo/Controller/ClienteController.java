@@ -22,6 +22,7 @@ import com.example.demo.DTO.RespuestaApi;
 import com.example.demo.Service.CitaService;
 import com.example.demo.Service.MascotaService;
 import com.example.demo.Service.UsuarioService;
+import com.example.demo.Service.VeterinarioService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class ClienteController {
     private final MascotaService mascotaServicio;
     private final CitaService citaServicio;
     private final UsuarioService usuarioServicio;
-    
+
         @PostMapping("/mascotas")
     public ResponseEntity<RespuestaApi> registrarMascota(
             @Valid @RequestBody MascotaSolicitud solicitud,
@@ -105,4 +106,5 @@ public class ClienteController {
             @Valid @RequestBody CambiarContrasenaSolicitud solicitud) {
         return ResponseEntity.ok(usuarioServicio.cambiarContrasena(solicitud));
     }
+
 }

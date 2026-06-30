@@ -19,4 +19,6 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
     List<Cita> findByEstado(String estado);
     
     boolean existsByMascotaIdAndFechaAndHora(Integer mascotaId, java.time.LocalDate fecha, java.time.LocalTime hora);
+
+    long countByVeterinarioId(Integer veterinarioId);
 }

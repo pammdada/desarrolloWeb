@@ -25,4 +25,6 @@ public class CitaSolicitud {
     
     @NotBlank(message = "Debe describir el problema")
     private String problema;
+
+    private Long veterinarioId;
 }
