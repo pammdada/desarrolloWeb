@@ -28,10 +28,11 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "jspdf": "^4.2.1",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.0.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0",
-    "sweetalert2": "^11.0.0"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular/build": "^20.3.2",

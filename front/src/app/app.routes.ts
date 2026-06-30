@@ -17,6 +17,7 @@ import { ListaClientes } from './components/admin/lista-clientes/lista-clientes'
 import { HistorialMascotas } from './components/veterinario/historial-mascotas/historial-mascotas';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
+import { MisCitas } from './components/cliente/mis-citas/mis-citas';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -90,6 +91,12 @@ export const routes: Routes = [
     path: 'pagos',
     component: Pagos,
     canActivate: [authGuard]
+  },
+  {
+    path: 'cliente/mis-citas',
+    component: MisCitas,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['CLIENTE'] }
   },
   { path: '**', redirectTo: '' }
 ];
