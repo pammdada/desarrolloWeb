@@ -96,13 +96,14 @@ export class Sidebar implements OnInit {
                 icon: 'paw',
               },
               { label: 'Agendar cita', route: '/agendar-cita', icon: 'calendar' },
+              { label: 'Servicios', route: '/pagos', icon: 'cart' },
+              { label: 'Compras previas', route: '/cliente/compras', icon: 'history' },
             ],
           },
           {
             label: 'Configuración',
             items: [
               { label: 'Perfil', route: '/perfil', icon: 'user' },
-              { label: 'Compras previas', route: '/cliente/compras', icon: 'cart' },
             ],
           },
         ];

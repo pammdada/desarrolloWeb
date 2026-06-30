@@ -24,4 +24,5 @@ public class MascotaSolicitud {
     private String fotoUrl;
 
     private Long clienteId;
+
 }

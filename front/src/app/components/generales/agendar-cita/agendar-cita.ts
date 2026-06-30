@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Mascota } from '../../../services/Mascotas/mascota';
+import { MascotaService } from '../../../services/Mascotas/mascota';
 import { Router, RouterOutlet, RouterLink } from '@angular/router';
 import { Citas } from '../../../services/Citas/citas';
 import Swal from 'sweetalert2';
@@ -15,6 +15,8 @@ import Swal from 'sweetalert2';
 })
 export class AgendarCita implements OnInit {
   listaMascotas: any[] = [];
+  veterinarios: any[] = [];
+  veterinarioSeleccionado: number | null = null;
   cita: any = { fechaHora: '', motivo: '', mascota: null, estado: 'PENDIENTE' };
 
   // Objeto para almacenar errores de validacion por campo
@@ -24,10 +26,11 @@ export class AgendarCita implements OnInit {
     motivo: ''
   };
 
-  constructor(private Mascota: Mascota, private citas: Citas, private router: Router) { }
+  constructor(private mascotaService: MascotaService, private citas: Citas, private router: Router) { }
 
   ngOnInit() {
     this.cargarMascotas();
+    this.cargarVeterinarios();
   }
 
   cargarMascotas() {
@@ -37,7 +40,7 @@ export class AgendarCita implements OnInit {
       const usuario = JSON.parse(usuarioAc);
       const clienteId = usuario.id;
 
-      this.Mascota.listarPorCliente(clienteId).subscribe((data) => {
+      this.mascotaService.listarPorCliente().subscribe((data) => {
         this.listaMascotas = data.datos || data;
       },
         (error) => {
@@ -45,6 +48,15 @@ export class AgendarCita implements OnInit {
         }
       );
     }
+  }
+
+  cargarVeterinarios() {
+    this.mascotaService.listarVeterinarios().subscribe({
+      next: (res) => {
+        this.veterinarios = res.datos ?? [];
+      },
+      error: () => {},
+    });
   }
 
   // Valida que la fecha sea a partir de manana, en horario 08:00-23:00,
@@ -136,7 +148,8 @@ export class AgendarCita implements OnInit {
       mascotaId: this.cita.mascota.id,
       fecha: fecha,
       hora: hora,
-      problema: this.cita.motivo.trim()
+      problema: this.cita.motivo.trim(),
+      veterinarioId: this.veterinarioSeleccionado,
     };
 
     const usuarioAc = localStorage.getItem('currentUser');

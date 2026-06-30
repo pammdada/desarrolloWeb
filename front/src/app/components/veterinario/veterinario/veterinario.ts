@@ -63,12 +63,14 @@ export class Veterinario {
   loadMyAppointments(): void {
     forkJoin({
       aceptadas: this.citas.getMyAppointments('ACEPTADA'),
-      atendidas: this.citas.getMyAppointments('ATENDIDA')
+      atendidas: this.citas.getMyAppointments('ATENDIDA'),
+      pendientes: this.citas.getMyAppointments('PENDIENTE')
     }).subscribe({
       next: (res) => {
         const aceptadas = res.aceptadas?.datos || [];
         const atendidas = res.atendidas?.datos || [];
-        this.myAppointments = [...aceptadas, ...atendidas];
+        const pendientes = res.pendientes?.datos || [];
+        this.myAppointments = [...pendientes, ...aceptadas, ...atendidas];
       },
       error: (err) => {
         console.error('Error al cargar citas asignadas', err);

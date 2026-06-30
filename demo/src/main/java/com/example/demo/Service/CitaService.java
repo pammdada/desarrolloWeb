@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,12 +62,30 @@ public class CitaService {
             return RespuestaApi.error("Ya tienes una cita agendada para esa mascota en esa fecha y hora");
         }
 
+        Usuario veterinario = null;
+
+        if (solicitud.getVeterinarioId() != null) {
+            veterinario = usuarioRepository.findById(solicitud.getVeterinarioId().intValue())
+                    .filter(u -> "VETERINARIO".equals(u.getRol()))
+                    .orElse(null);
+        }
+
+        if (veterinario == null) {
+            List<Usuario> activos = usuarioRepository.findByRolAndEstadoVet("VETERINARIO", "ACTIVO");
+            if (!activos.isEmpty()) {
+                veterinario = activos.stream()
+                        .min(Comparator.comparingLong(v -> citaRepository.countByVeterinarioId(v.getId())))
+                        .orElse(null);
+            }
+        }
+
         Cita cita = Cita.builder()
                 .cliente(cliente)
                 .mascota(mascota)
                 .fecha(solicitud.getFecha())
                 .hora(solicitud.getHora())
                 .problema(solicitud.getProblema())
+                .veterinario(veterinario)
                 .estado("PENDIENTE")
                 .build();
 

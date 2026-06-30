@@ -42,4 +42,5 @@ public class Mascota {
     
     @Column(name = "foto_url", length = 255)
     private String fotoUrl;
+
 }

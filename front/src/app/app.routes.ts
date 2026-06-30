@@ -6,7 +6,6 @@ import { Cliente } from './components/cliente/cliente/cliente';
 import { Home } from './components/generales/home/home';
 import { Registro } from './components/generales/registro/registro';
 import { AgendarCita } from './components/generales/agendar-cita/agendar-cita';
-import { RegistrarMascota } from './components/generales/registrar-mascota/registrar-mascota';
 import { VerificarToken } from './components/generales/verificar-token/verificar-token';
 import { Perfil } from './components/generales/perfil/perfil';
 import { Servicios } from './components/admin/servicios/servicios';
@@ -74,11 +73,6 @@ export const routes: Routes = [
   {
     path: 'agendar-cita',
     component: AgendarCita,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'registrar-mascota',
-    component: RegistrarMascota,
     canActivate: [authGuard]
   },
   {
